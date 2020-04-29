@@ -13,4 +13,10 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="home_second">Home Second</string>
+    <string name="category">Category</string>
+    <string name="search">Search</string>
+    <string name="your_downloads">Your Downloads</string>
+    <string name="exit">Exit</string>
+    <string name="downloads">Downloads</string>
+    <string name="select_an_option">Select an option</string>
 </resources>

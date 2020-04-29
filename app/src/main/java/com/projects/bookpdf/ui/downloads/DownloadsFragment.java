@@ -1,4 +1,4 @@
-package com.projects.bookpdf.ui.home;
+package com.projects.bookpdf.ui.downloads;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,26 +12,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
-import com.projects.bookpdf.ui.category.CategoryFragment;
-import com.projects.bookpdf.ui.category.CategoryViewModel;
-import com.projects.bookpdf.ui.category.CategoryViewModelFactory;
 
-public class HomeFragment extends Fragment implements ViewModelStoreOwner {
+public class DownloadsFragment extends Fragment implements ViewModelStoreOwner {
 
-    private HomeViewModel homeViewModel;
+    private DownloadsViewModel downloadsViewModel;
     private View view;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(HomeFragment.this
-                        , new HomeViewModelFactory(getContext()))
-                        .get(HomeViewModel.class);
-        view= inflater.inflate(R.layout.fragment_home, container, false);
+        downloadsViewModel =
+                new ViewModelProvider(DownloadsFragment.this
+                        , new DownloadsViewModelFactory(getContext()))
+                        .get(DownloadsViewModel.class);
+        view = inflater.inflate(R.layout.fragment_downloads, container, false);
+
         return view;
     }
     @Override
