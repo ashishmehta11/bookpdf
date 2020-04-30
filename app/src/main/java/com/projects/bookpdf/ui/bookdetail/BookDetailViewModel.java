@@ -4,10 +4,10 @@ import android.content.Context;
 
 import androidx.lifecycle.ViewModel;
 
-public class BookDetailViewModel extends ViewModel {
+class BookDetailViewModel extends ViewModel {
     private Context context;
 
-    public BookDetailViewModel(Context context) {
+    BookDetailViewModel(Context context) {
         this.context = context;
     }
 }
