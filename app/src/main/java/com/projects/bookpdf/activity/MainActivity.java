@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -24,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
 import com.projects.bookpdf.data.ObjectCollection;
+import com.projects.bookpdf.ui.bookdetail.BookDetailFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Objects;
@@ -147,10 +149,21 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        else if (!MainActivityData.title.equalsIgnoreCase("Home")) {
-            navController.navigate(R.id.home);
-        } else
-            showConfirmationDialog(getString(R.string.txt_dialog_exit_title));
+        else {
+            NavDestination navDestination=navController.getCurrentDestination();
+            assert navDestination != null;
+            if(navDestination.getId()==R.id.book_details)
+            {
+                if(BookDetailFragment.cameFromHome==0||BookDetailFragment.cameFromHome==1)
+                    navController.navigate(R.id.home);
+                else if(BookDetailFragment.cameFromHome==2)
+                    navController.navigate(R.id.search);
+            }
+            else if (navDestination.getId()!=R.id.home)
+                navController.navigate(R.id.home);
+            else
+                showConfirmationDialog(getString(R.string.txt_dialog_exit_title));
+        }
     }
     public static void showProgressDialog()
     {

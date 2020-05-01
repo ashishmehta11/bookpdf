@@ -81,8 +81,24 @@ public class Book {
         return downloadUrl;
     }
 
-    public boolean isAreDetailsFetched() {
+    public boolean areDetailsFetched() {
         return areDetailsFetched;
+    }
+
+    public void setAuthors(String authors) {
+        this.authors = authors;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    public void setAreDetailsFetched(boolean areDetailsFetched) {
+        this.areDetailsFetched = areDetailsFetched;
+    }
+
+    public void setBookLanguage(String bookLanguage) {
+        this.bookLanguage = bookLanguage;
     }
 
     @Override

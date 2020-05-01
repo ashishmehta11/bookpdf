@@ -63,7 +63,7 @@ public class HomePageBooksAdapter extends SectionAdapter<HomePageBooksAdapter.It
             params.bottomMargin=200;
             holder.bookList.setLayoutParams(params);
         }
-        HomePageInnerRecyclerBooksAdapter booksAdapter=new HomePageInnerRecyclerBooksAdapter(bookList,context);
+        HomePageInnerRecyclerBooksAdapter booksAdapter=new HomePageInnerRecyclerBooksAdapter(headerText,bookList,context);
         holder.bookList.setAdapter(booksAdapter);
     }
 

@@ -1,6 +1,7 @@
 package com.projects.bookpdf.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,8 +21,9 @@ import java.util.ArrayList;
 public class HomePageInnerRecyclerBooksAdapter extends RecyclerView.Adapter<HomePageInnerRecyclerBooksAdapter.ViewHolder> {
     private ArrayList<Book> bookList;
     private Context context;
-
-    public HomePageInnerRecyclerBooksAdapter(ArrayList<Book> bookList, Context context) {
+    private String headerText;
+    public HomePageInnerRecyclerBooksAdapter(String headerText,ArrayList<Book> bookList, Context context) {
+        this.headerText=headerText;
         this.bookList = bookList;
         this.context = context;
     }
@@ -45,6 +48,14 @@ public class HomePageInnerRecyclerBooksAdapter extends RecyclerView.Adapter<Home
             holder.txtYear.setText(String.valueOf(bookList.get(position).getBookYear()));
         else
             holder.txtYear.setText("NA");
+        holder.imgBook.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("coming_from_home",true);
+            bundle.putBoolean("coming_from_search",false);
+            bundle.putString("header_text",headerText);
+            bundle.putInt("current_book_position",position);
+            Navigation.findNavController(v).navigate(R.id.book_details,bundle);
+        });
     }
 
     @Override
