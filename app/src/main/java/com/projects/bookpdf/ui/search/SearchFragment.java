@@ -10,9 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.projects.bookpdf.R;
+import com.projects.bookpdf.adapter.RecyclerAdapterSearchBooks;
 import com.projects.bookpdf.data.MainActivityData;
+import com.projects.bookpdf.data.ObjectCollection;
 
 public class SearchFragment extends Fragment implements ViewModelStoreOwner {
 
@@ -25,11 +28,12 @@ public class SearchFragment extends Fragment implements ViewModelStoreOwner {
                         , new SearchViewModelFactory(getContext()))
                         .get(SearchViewModel.class);
         view= inflater.inflate(R.layout.fragment_search, container, false);
+        RecyclerView recyclerView=view.findViewById(R.id.recycler_search_books);
+        searchViewModel.setAdapter(recyclerView);
         return view;
     }
     @Override
     public void onResume() {
         super.onResume();
-
     }
 }

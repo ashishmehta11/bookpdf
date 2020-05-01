@@ -92,7 +92,6 @@ public class ObjectCollection {
                     loadRemainingHomePageBooks(activity);
                 }
 
-
             } catch (Exception e) {
                 Log.e("setHomePageBook","execetion : "+e.getMessage()+"\n\n"+ Arrays.toString(e.getStackTrace()));
             }
@@ -162,6 +161,8 @@ public class ObjectCollection {
             }
         }).start();
     }
+
+
     public static class HomePageNotifier extends Observable
     {
         void signalHomeFragment()
