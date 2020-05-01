@@ -57,7 +57,9 @@ public class ObjectCollection {
                                 String bookDescription="";
                                 String authors="";
                                 String bookLanguage="";
-                                b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage);
+                                String downloadUrl="";
+                                boolean areDetailsFetched=false;
+                                b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage,downloadUrl,areDetailsFetched);
                                 tempBook.add(b);
                             }
                         }

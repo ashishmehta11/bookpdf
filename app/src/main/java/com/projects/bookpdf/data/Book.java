@@ -14,8 +14,10 @@ public class Book {
     private String bookSize;
     private String bookTotalDownload;
     private String authors;
+    private String downloadUrl;
+    private boolean areDetailsFetched;
 
-    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, int bookYear, String bookSize, String bookTotalDownload,String authors,String bookLanguage) {
+    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, int bookYear, String bookSize, String bookTotalDownload,String authors,String bookLanguage,String downloadUrl,boolean areDetailsFetched) {
         this.bookId = bookId;
         this.bookName = bookName;
         this.bookUrl = bookUrl;
@@ -27,6 +29,8 @@ public class Book {
         this.bookTotalDownload = bookTotalDownload;
         this.authors=authors;
         this.bookLanguage=bookLanguage;
+        this.downloadUrl=downloadUrl;
+        this.areDetailsFetched=areDetailsFetched;
     }
 
     public int getBookId() {
@@ -73,6 +77,14 @@ public class Book {
         return bookLanguage;
     }
 
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public boolean isAreDetailsFetched() {
+        return areDetailsFetched;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -87,6 +99,8 @@ public class Book {
                 ", bookTotalDownload='" + bookTotalDownload + '\'' +
                 ", authors='" + authors + '\'' +
                 ", bookLanguage='" + bookLanguage + '\'' +
+                ", downloadUrl='" + downloadUrl + '\'' +
+                ", areDetailsFetched='" + areDetailsFetched + '\'' +
                 '}';
     }
 }
