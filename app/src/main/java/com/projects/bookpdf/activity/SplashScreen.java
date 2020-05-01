@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.projects.bookpdf.R;
+import com.projects.bookpdf.data.ObjectCollection;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                ObjectCollection.setHomePageBook();
                 Intent intent=new Intent(SplashScreen.this,MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
