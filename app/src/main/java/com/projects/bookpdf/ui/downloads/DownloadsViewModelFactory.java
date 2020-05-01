@@ -11,13 +11,15 @@ import com.projects.bookpdf.ui.category.CategoryViewModel;
 public class DownloadsViewModelFactory implements ViewModelProvider.Factory {
     private Context context;
 
-    public DownloadsViewModelFactory(Context context) {
+    DownloadsViewModelFactory(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        if(modelClass.isAssignableFrom(DownloadsViewModel.class))
             return (T) new DownloadsViewModel(context);
+        return null;
     }
 }

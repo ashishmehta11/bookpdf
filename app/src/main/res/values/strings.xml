@@ -19,4 +19,12 @@
     <string name="exit">Exit</string>
     <string name="downloads">Downloads</string>
     <string name="select_an_option">Select an option</string>
+    <string name="search_a_book">Search a book</string>
+    <string name="edit_txt_search_hint">Enter a book name</string>
+    <string name="txt_dialog_exit_title">Are you sure you want to Exit?</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="confirm">Confirm</string>
+    <string name="txt_exit_confirmation">Are you sure you want to exit?</string>
 </resources>

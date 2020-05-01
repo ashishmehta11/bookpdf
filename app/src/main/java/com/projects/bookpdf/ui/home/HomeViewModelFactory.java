@@ -11,14 +11,15 @@ import com.projects.bookpdf.ui.category.CategoryViewModel;
 public class HomeViewModelFactory implements ViewModelProvider.Factory {
     private Context context;
 
-    public HomeViewModelFactory(Context context) {
+    HomeViewModelFactory(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        if(modelClass.isAssignableFrom(HomeViewModel.class))
             return (T) new HomeViewModel(context);
-
+        return null;
     }
 }

@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DownloadsViewModel extends ViewModel {
+class DownloadsViewModel extends ViewModel {
 
 
     private Context context;
-    public DownloadsViewModel(Context context) {
+    DownloadsViewModel(Context context) {
         this.context=context;
 
     }

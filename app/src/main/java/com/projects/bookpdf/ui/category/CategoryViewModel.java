@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 public class CategoryViewModel extends ViewModel {
     private Context context;
 
-    public CategoryViewModel(Context context) {
+    CategoryViewModel(Context context) {
         this.context = context;
     }
 }

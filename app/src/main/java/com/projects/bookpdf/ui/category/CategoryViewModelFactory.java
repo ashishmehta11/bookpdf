@@ -9,14 +9,16 @@ import androidx.lifecycle.ViewModelProvider;
 public class CategoryViewModelFactory implements ViewModelProvider.Factory {
     private Context context;
 
-    public CategoryViewModelFactory(Context context) {
+    CategoryViewModelFactory(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        if(modelClass.isAssignableFrom(CategoryViewModel.class))
             return (T) new CategoryViewModel(context);
+        return null;
 
     }
 }
