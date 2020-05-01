@@ -1,6 +1,8 @@
 package com.projects.bookpdf.activity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,6 +15,10 @@ import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ChasingDots;
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.projects.bookpdf.R;
@@ -20,19 +26,32 @@ import com.projects.bookpdf.data.MainActivityData;
 import com.projects.bookpdf.data.ObjectCollection;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
     private CardView home, category, search, downloads, exit;
     private EditText editTextSearch;
     private TextView txtTitle,txtMessasge;
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private NavController navController;
-    private View confirmDialogView,searchDialogView;
+    private View confirmDialogView,searchDialogView,progressView;
     private AlertDialog confirmDialog,searchDialog;
     private MaterialCardView yesCard,noCard,searchCard;
+    public static Dialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //TODO: setting progress dialog
+        progressView=getLayoutInflater().inflate(R.layout.progress_wheel,null,false);
+        progressDialog=new Dialog(MainActivity.this,R.style.Theme_AppCompat_Light_Dialog_Alert);
+        progressDialog.setContentView(progressView);
+        progressDialog.setCancelable(false);
+        Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+        SpinKitView progressDialog=progressView.findViewById(R.id.spin_kit);
+        Sprite sprite=new FadingCircle();
+        sprite.setColor(R.color.colorPrimary);
+        progressDialog.setIndeterminateDrawable(sprite);
         //TODO: Initializing and creating views for confirmation dialog
         confirmDialogView=getLayoutInflater().inflate(R.layout.confirm_dialog,null);
         AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
@@ -132,5 +151,15 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.home);
         } else
             showConfirmationDialog(getString(R.string.txt_dialog_exit_title));
+    }
+    public static void showProgressDialog()
+    {
+        if(!progressDialog.isShowing())
+        progressDialog.show();
+    }
+    public static void stopProgressDialog()
+    {
+        if(progressDialog.isShowing())
+        progressDialog.dismiss();
     }
 }

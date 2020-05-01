@@ -14,15 +14,16 @@ import com.cruxlab.sectionedrecyclerview.lib.BaseSectionAdapter;
 import com.cruxlab.sectionedrecyclerview.lib.SectionAdapter;
 import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
+import com.projects.bookpdf.data.Book;
 
 import java.util.ArrayList;
 
 public class HomePageBooksAdapter extends SectionAdapter<HomePageBooksAdapter.ItemViewHolder, HomePageBooksAdapter.HeaderViewHolder> {
     private String headerText;
-    private ArrayList bookList;
+    private ArrayList<Book> bookList;
     private boolean isThisLast;
     private Context context;
-    public HomePageBooksAdapter(boolean isHeaderVisible, boolean isHeaderPinned,Context context,String headerText,ArrayList bookList,boolean isLast) {
+    public HomePageBooksAdapter(boolean isHeaderVisible, boolean isHeaderPinned,Context context,String headerText,ArrayList<Book> bookList,boolean isLast) {
         super(isHeaderVisible, isHeaderPinned);
         this.context=context;
         this.headerText=headerText;
@@ -59,7 +60,7 @@ public class HomePageBooksAdapter extends SectionAdapter<HomePageBooksAdapter.It
         if(isThisLast)
         {
             ConstraintLayout.LayoutParams params= (ConstraintLayout.LayoutParams) holder.bookList.getLayoutParams();
-            params.bottomMargin=124;
+            params.bottomMargin=200;
             holder.bookList.setLayoutParams(params);
         }
         HomePageInnerRecyclerBooksAdapter booksAdapter=new HomePageInnerRecyclerBooksAdapter(bookList,context);

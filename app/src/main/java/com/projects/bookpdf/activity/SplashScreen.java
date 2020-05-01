@@ -18,7 +18,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ObjectCollection.setHomePageBook();
+                ObjectCollection.setHomePageBook(SplashScreen.this);
                 Intent intent=new Intent(SplashScreen.this,MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
