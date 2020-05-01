@@ -4,16 +4,17 @@ import java.util.ArrayList;
 
 public class Book {
     private int bookId;
-    String bookName;
-    String bookUrl;
-    String bookImageURL;
-    String bookDescription;
-    String bookPage;
-    int bookYear;
-    String bookSize;
-    String bookTotalDownload;
+    private String bookName;
+    private String bookUrl;
+    private String bookImageURL;
+    private String bookDescription;
+    private String bookPage;
+    private int bookYear;
+    private String bookSize;
+    private String bookTotalDownload;
+    private String authors;
 
-    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, int bookYear, String bookSize, String bookTotalDownload) {
+    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, int bookYear, String bookSize, String bookTotalDownload,String authors) {
         this.bookId = bookId;
         this.bookName = bookName;
         this.bookUrl = bookUrl;
@@ -23,6 +24,7 @@ public class Book {
         this.bookYear = bookYear;
         this.bookSize = bookSize;
         this.bookTotalDownload = bookTotalDownload;
+        this.authors=authors;
     }
 
     public int getBookId() {
@@ -61,6 +63,10 @@ public class Book {
         return bookTotalDownload;
     }
 
+    public String getAuthors() {
+        return authors;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -73,6 +79,7 @@ public class Book {
                 ", bookYear=" + bookYear +
                 ", bookSize='" + bookSize + '\'' +
                 ", bookTotalDownload='" + bookTotalDownload + '\'' +
+                ", authors='" + authors + '\'' +
                 '}';
     }
 }
