@@ -56,7 +56,8 @@ public class ObjectCollection {
                                 String bookPage=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
                                 String bookDescription="";
                                 String authors="";
-                                b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors);
+                                String bookLanguage="";
+                                b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage);
                                 tempBook.add(b);
                             }
                         }

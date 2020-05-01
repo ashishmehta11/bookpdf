@@ -9,12 +9,13 @@ public class Book {
     private String bookImageURL;
     private String bookDescription;
     private String bookPage;
+    private String bookLanguage;
     private int bookYear;
     private String bookSize;
     private String bookTotalDownload;
     private String authors;
 
-    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, int bookYear, String bookSize, String bookTotalDownload,String authors) {
+    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, int bookYear, String bookSize, String bookTotalDownload,String authors,String bookLanguage) {
         this.bookId = bookId;
         this.bookName = bookName;
         this.bookUrl = bookUrl;
@@ -25,6 +26,7 @@ public class Book {
         this.bookSize = bookSize;
         this.bookTotalDownload = bookTotalDownload;
         this.authors=authors;
+        this.bookLanguage=bookLanguage;
     }
 
     public int getBookId() {
@@ -67,6 +69,10 @@ public class Book {
         return authors;
     }
 
+    public String getBookLanguage() {
+        return bookLanguage;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -80,6 +86,7 @@ public class Book {
                 ", bookSize='" + bookSize + '\'' +
                 ", bookTotalDownload='" + bookTotalDownload + '\'' +
                 ", authors='" + authors + '\'' +
+                ", bookLanguage='" + bookLanguage + '\'' +
                 '}';
     }
 }
