@@ -24,7 +24,6 @@ public class ObjectCollection {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final StringBuilder builder = new StringBuilder();
                 try {
                     Document doc = Jsoup.connect(homePageBook.getUrl()).get();
                     Elements allBooks = doc.select("[class=files-new]");
@@ -63,9 +62,12 @@ public class ObjectCollection {
 
                     }
                     homePageBook=new HomePageBook(tempBooksCollection);
+                    for(Map.Entry m:tempBooksCollection.entrySet())
+                    {
+                        Log.e("Book List ",m.getKey()+"  :=  "+m.getValue().toString());
+                    }
 
                 } catch (IOException e) {
-                    builder.append("Error : ").append(e.getMessage()).append("\n");
                 }
             }
         }).start();

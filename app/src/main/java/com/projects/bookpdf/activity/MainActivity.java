@@ -17,6 +17,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
+import com.projects.bookpdf.data.ObjectCollection;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //TODO: Initializing and creating views for confirmation dialog
         confirmDialogView=getLayoutInflater().inflate(R.layout.confirm_dialog,null);
         AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);

@@ -11,15 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.projects.bookpdf.R;
+import com.projects.bookpdf.data.Book;
 
 import java.util.ArrayList;
 
 public class HomePageInnerRecyclerBooksAdapter extends RecyclerView.Adapter<HomePageInnerRecyclerBooksAdapter.ViewHolder>  {
-    private ArrayList bookList;
+    private ArrayList<Book> bookList;
     private Context context;
 
-    public HomePageInnerRecyclerBooksAdapter(ArrayList bookList, Context context) {
+    public HomePageInnerRecyclerBooksAdapter(ArrayList<Book> bookList, Context context) {
         this.bookList = bookList;
         this.context = context;
     }
@@ -34,7 +36,10 @@ public class HomePageInnerRecyclerBooksAdapter extends RecyclerView.Adapter<Home
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.txtTitle.setText((String)bookList.get(position));
+        Glide.with(context).load(bookList.get(position).getBookImageURL()).into(holder.imgBook);
+        holder.txtTitle.setText(bookList.get(position).getBookName().toString());
+        holder.txtYear.setText(String.valueOf(bookList.get(position).getBookYear()));
+
     }
 
     @Override
