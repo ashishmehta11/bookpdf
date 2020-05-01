@@ -44,7 +44,6 @@ public class ObjectCollection {
                 Log.e("setHomePageBook","entering for");
                 for(int index=0;index<allBooks.size();index++)
                 {
-
                     ArrayList<Book> tempBook = new ArrayList<>();
                     Element books=allBooks.get(index);
                     if (books.hasText())
@@ -57,7 +56,7 @@ public class ObjectCollection {
                                 String bookImageUrl=books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
                                 String bookUrl=books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
                                 String bookName=books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
-                                int bookYear=Integer.parseInt(books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text());
+                                String bookYear=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
                                 String bookSize=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
                                 String bookTotalDownload=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
                                 String bookPage=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
@@ -70,28 +69,107 @@ public class ObjectCollection {
                                 tempBook.add(b);
                             }
                         }
-
                         tempBooksCollection.put(cats.get(catIndex++).select("a").text(),tempBook);
                         tempBook=null;
                     }
 
                 }
-                Log.e("setHomePageBook","exited for");
+
+                doc = Jsoup.connect("https://www.pdfdrive.com/certified-ethical-hacker-books.html").get();
+                Elements books = doc.select("[class=files-new]");
                 homePageBook=new HomePageBook(tempBooksCollection);
-                for(Map.Entry m:tempBooksCollection.entrySet())
+                ArrayList<Book> tempBook = new ArrayList<>();
+                for(int subIndex=0;subIndex<books.select("li").size();subIndex++)
                 {
-                    Log.e("Book List ",m.getKey()+"  :=  "+m.getValue().toString());
+
+                    Book b;
+                    if(!books.select("li").get(subIndex).hasClass("liad")) {
+                        int bookId=Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                        String bookImageUrl=books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                        String bookUrl=books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                        String bookName=books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                        String bookYear=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                        String bookSize=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                        String bookTotalDownload=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                        String bookPage=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                        String bookDescription="";
+                        String authors="";
+                        String bookLanguage="";
+                        String downloadUrl="";
+                        boolean areDetailsFetched=false;
+                        b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage,downloadUrl,areDetailsFetched);
+                        tempBook.add(b);
+                    }
                 }
+                tempBooksCollection.put("Hacking",tempBook);
+
+//                politis and law
+                doc = Jsoup.connect("https://www.pdfdrive.com/category/15").get();
+                books = doc.select("[class=files-new]");
+
+                tempBook = new ArrayList<>();
+                for(int subIndex=0;subIndex<books.select("li").size();subIndex++)
+                {
+
+                    Book b;
+                    if(!books.select("li").get(subIndex).hasClass("liad")) {
+                        int bookId=Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                        String bookImageUrl=books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                        String bookUrl=books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                        String bookName=books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                        String bookYear=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                        String bookSize=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                        String bookTotalDownload=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                        String bookPage=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                        String bookDescription="";
+                        String authors="";
+                        String bookLanguage="";
+                        String downloadUrl="";
+                        boolean areDetailsFetched=false;
+                        b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage,downloadUrl,areDetailsFetched);
+                        tempBook.add(b);
+                    }
+                }
+                tempBooksCollection.put("Politics & Laws",tempBook);
+//            Latest Development
+                doc = Jsoup.connect("https://www.pdfdrive.com/search?q=latest+developments&pagecount=&pubyear=2015").get();
+                books = doc.select("[class=files-new]");
+
+                tempBook=null;
+                tempBook = new ArrayList<>();
+                for(int subIndex=0;subIndex<books.select("li").size();subIndex++)
+                {
+
+                    Book b;
+                    if(!books.select("li").get(subIndex).hasClass("liad")) {
+                        int bookId=Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                        String bookImageUrl=books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                        String bookUrl=books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                        String bookName=books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                        String bookYear=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                        String bookSize=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                        String bookTotalDownload=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                        String bookPage=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                        String bookDescription="";
+                        String authors="";
+                        String bookLanguage="";
+                        String downloadUrl="";
+                        boolean areDetailsFetched=false;
+                        b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage,downloadUrl,areDetailsFetched);
+                        tempBook.add(b);
+                    }
+                }
+                tempBooksCollection.put("Technology and Development",tempBook);
+                homePageBook=new HomePageBook(tempBooksCollection);
                 //TODO : To temporary make the application work , uncomment the below code.
                 //activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
 
                 //TODO: All the categories are not being loaded in home page accoridng to pdf drive.
-                totalNoOfHomePageCatsLeft=14;//TODO: make this digit dynamic!
+                totalNoOfHomePageCatsLeft=1;//TODO: make this digit dynamic!
                 for(int i=1;i<=totalNoOfHomePageCatsLeft;i++)
                 {
                     loadRemainingHomePageBooks(activity);
                 }
-
 
             } catch (Exception e) {
                 Log.e("setHomePageBook","execetion : "+e.getMessage()+"\n\n"+ Arrays.toString(e.getStackTrace()));
@@ -116,18 +194,22 @@ public class ObjectCollection {
                 Log.e("loadRemainingHomeBooks","Exception : "+e.getMessage()+"\n\n"+ Arrays.toString(e.getStackTrace()));
             }
         }).start();
+
     }
     //TODO: use this method to load book details from home page object
     public static void getIndividualBookDetails(String headerText, int position, String bookUrl,FragmentActivity activity)
     {
         new Thread(() -> {
             try {
-                String bookLanguage="";
-                String authors="";
-                String downloadUrl="";
+
+                Log.e("Book Url k:-",bookUrl);
                 //TODO: Write code here and fill the variables above by using 'bookUrl' parameter.
-
-
+                Document getDataFromBookUrl = Jsoup.connect(bookUrl).get();
+                String sessionId=getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-preview").toString();
+                String dataId=getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-id").toString();
+                String downloadUrl="https://www.pdfdrive.com/download.pdf?id="+dataId+"&h="+sessionId.split("session=")[1]+"&u=cache&ext=pdf";
+                String authors=getDataFromBookUrl.select("[itemprop=creator]").text().toString();
+                String bookLanguage=getDataFromBookUrl.select("[class=info-green]").last().text().toString();
                 //TODO: Don't touch below code!
                 Objects.requireNonNull(homePageBook.getBooks().get(headerText)).get(position).setBookLanguage(bookLanguage);
                 Objects.requireNonNull(homePageBook.getBooks().get(headerText)).get(position).setAuthors(authors);
