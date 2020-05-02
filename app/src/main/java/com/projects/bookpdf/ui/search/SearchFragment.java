@@ -23,10 +23,12 @@ public class SearchFragment extends Fragment implements ViewModelStoreOwner {
     private View view;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+
         searchViewModel =
-                new ViewModelProvider(SearchFragment.this
-                        , new SearchViewModelFactory(getContext()))
-                        .get(SearchViewModel.class);
+                new ViewModelProvider(SearchFragment.this,
+                        new SearchViewModelFactory(requireContext()))
+                .get(SearchViewModel.class);
         view= inflater.inflate(R.layout.fragment_search, container, false);
         RecyclerView recyclerView=view.findViewById(R.id.recycler_search_books);
         searchViewModel.setAdapter(recyclerView);

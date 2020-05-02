@@ -50,7 +50,7 @@ public class RecyclerAdapterSearchBooks extends RecyclerView.Adapter<RecyclerAda
                 .load(ObjectCollection.searchBook.getBooks().get(position).getBookImageURL())
                 .into(holder.bookCover);
 
-        if (ObjectCollection.searchBook.getBooks().get(position).getBookYear() > 0)
+        if (ObjectCollection.searchBook.getBooks().get(position).getBookYear().length()> 0)
             holder.txtYear.setText(String.valueOf(ObjectCollection.searchBook.getBooks().get(position).getBookYear()));
         else
             holder.txtYear.setText("NA");

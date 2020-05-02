@@ -67,7 +67,10 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                 if(integer >0)
                 {
                     Book b = Objects.requireNonNull(ObjectCollection.homePageBook.getBooks().get(headerText)).get(position);
-                    txtAuthor.setText(b.getAuthors());
+                    if(b.getAuthors().length()<=0)
+                        txtAuthor.setText("Not Available");
+                    else
+                        txtAuthor.setText(b.getAuthors());
                     txtLanguage.setText(b.getBookLanguage());
                     btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl()));
                 }
@@ -88,7 +91,10 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                 if(integer >0)
                 {
                     Book b = ObjectCollection.searchBook.getBooks().get(position);
-                    txtAuthor.setText(b.getAuthors());
+                    if(b.getAuthors().length()<=0)
+                        txtAuthor.setText("Not Available");
+                    else
+                        txtAuthor.setText(b.getAuthors());
                     txtLanguage.setText(b.getBookLanguage());
                     btnDownload.setOnClickListener(v -> {
                         bookDetailViewModel.downloadBook(b.getDownloadUrl());
@@ -130,6 +136,9 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
         txtTotalDownloads.setText(book.getBookTotalDownload().split(" ")[0]);
 
         txtAuthor = view.findViewById(R.id.txt_author);
+        if(book.getAuthors().length()<=0)
+        txtAuthor.setText("Not Available");
+        else
         txtAuthor.setText(book.getAuthors());
 
         btnDownload = view.findViewById(R.id.material_card_download);
