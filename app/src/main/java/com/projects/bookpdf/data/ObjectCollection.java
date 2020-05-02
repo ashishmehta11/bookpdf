@@ -26,6 +26,8 @@ public class ObjectCollection {
     public static HomePageBook homePageBook=null;
     public static HomePageNotifier homePageNotifier=new HomePageNotifier();
     public static BookDetailNotifier bookDetailNotifier=new BookDetailNotifier();
+    public static SearchResultNotifier searchResultNotifier=new SearchResultNotifier();
+    public static MoreSearchPagesNotifier moreSearchPagesNotifier=new MoreSearchPagesNotifier();
     public static int totalNoOfHomePageCatsLeft;
     public static int currHomePageCats=0;
     public static void setHomePageBook(Activity activity)
@@ -258,6 +260,24 @@ public class ObjectCollection {
     public static class BookDetailNotifier extends Observable
     {
         void notifyBookDetailViewModel()
+        {
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    public static class SearchResultNotifier extends Observable
+    {
+        void notifyHomeActivity()
+        {
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    public static class MoreSearchPagesNotifier extends Observable
+    {
+        void searchViewModel()
         {
             setChanged();
             notifyObservers();

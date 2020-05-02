@@ -17,6 +17,7 @@ class SearchViewModel extends ViewModel implements Observer {
     private RecyclerAdapterSearchBooks recyclerAdapterSearchBooks;
     SearchViewModel(Context context) {
         this.context = context;
+        ObjectCollection.moreSearchPagesNotifier.addObserver(SearchViewModel.this);
     }
 
     void setAdapter(RecyclerView recyclerView) {
@@ -27,9 +28,11 @@ class SearchViewModel extends ViewModel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if(recyclerAdapterSearchBooks!=null) {
-            RecyclerAdapterSearchBooks.newIncomingDataReached=true;
-            recyclerAdapterSearchBooks.notifyDataSetChanged();
+        if(o instanceof ObjectCollection.MoreSearchPagesNotifier) {
+            if (recyclerAdapterSearchBooks != null) {
+                RecyclerAdapterSearchBooks.newIncomingDataReached = true;
+                recyclerAdapterSearchBooks.notifyDataSetChanged();
+            }
         }
     }
 

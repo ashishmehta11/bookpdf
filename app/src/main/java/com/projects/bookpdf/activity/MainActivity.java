@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ObjectCollection.searchResultNotifier.addObserver(MainActivity.this);
         //TODO: setting progress dialog
         progressView=getLayoutInflater().inflate(R.layout.progress_wheel,null,false);
         progressDialog=new Dialog(MainActivity.this,R.style.Theme_AppCompat_Light_Dialog_Alert);
@@ -180,8 +181,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        stopProgressDialog();
-        searchDialog.dismiss();
-        navController.navigate(R.id.search);
+        if(o instanceof ObjectCollection.SearchResultNotifier) {
+            stopProgressDialog();
+            searchDialog.dismiss();
+            navController.navigate(R.id.search);
+        }
     }
 }
