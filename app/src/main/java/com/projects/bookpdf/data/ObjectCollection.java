@@ -12,7 +12,6 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
-import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +73,7 @@ public class ObjectCollection {
                     }
 
                 }
+//                activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
 
                 doc = Jsoup.connect("https://www.pdfdrive.com/certified-ethical-hacker-books.html").get();
                 Elements books = doc.select("[class=files-new]");
@@ -134,7 +134,6 @@ public class ObjectCollection {
 //            Latest Development
                 doc = Jsoup.connect("https://www.pdfdrive.com/search?q=latest+developments&pagecount=&pubyear=2015").get();
                 books = doc.select("[class=files-new]");
-
                 tempBook=null;
                 tempBook = new ArrayList<>();
                 for(int subIndex=0;subIndex<books.select("li").size();subIndex++)
@@ -162,7 +161,7 @@ public class ObjectCollection {
                 tempBooksCollection.put("Technology and Development",tempBook);
                 homePageBook=new HomePageBook(tempBooksCollection);
                 //TODO : To temporary make the application work , uncomment the below code.
-                //activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
+                activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
 
                 //TODO: All the categories are not being loaded in home page accoridng to pdf drive.
                 totalNoOfHomePageCatsLeft=1;//TODO: make this digit dynamic!
@@ -244,6 +243,82 @@ public class ObjectCollection {
             }
         }).start();
     }
+
+    public static void searchForBook(String query) {
+        ArrayList<Book> tempBook=new ArrayList<>();
+        String searchQuery=query.replace(" ","+");
+        String searchUrl="https://www.pdfdrive.com/search?q="+searchQuery;
+        new Thread(() -> {
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(searchUrl).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Elements books = doc.select("[class=files-new]");
+        int totalPage=Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
+        for(int subIndex=0;subIndex<books.select("li").size();subIndex++)
+        {
+            Book b;
+            if(!books.select("li").get(subIndex).hasClass("liad")) {
+                int bookId=Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                String bookImageUrl=books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                String bookUrl=books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                String bookName=books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                String bookYear=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                String bookSize=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                String bookTotalDownload=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                String bookPage=books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                String bookDescription="";
+                String authors="";
+                String bookLanguage="";
+                String downloadUrl="";
+                boolean areDetailsFetched=false;
+                b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage,downloadUrl,areDetailsFetched);
+                tempBook.add(b);
+            }
+        }
+            SearchBook searchBook=new SearchBook(tempBook,searchUrl,searchQuery,totalPage);
+        }).start();
+    }
+
+    public static void getOneMoreSearchPage(int pageNo, String searchUrl) {
+        ArrayList<Book> tempBook=new ArrayList<>();
+        searchUrl.concat("&page="+pageNo);
+        Log.e("Search Url",searchUrl);
+        new Thread(() -> {
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(searchUrl).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Elements books = doc.select("[class=files-new]");
+            int totalPage=Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
+            for(int subIndex=0;subIndex<books.select("li").size();subIndex++) {
+                Book b;
+                if (!books.select("li").get(subIndex).hasClass("liad")) {
+                    int bookId = Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                    String bookImageUrl = books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                    String bookUrl = books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                    String bookName = books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                    String bookYear = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                    String bookSize = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                    String bookTotalDownload = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                    String bookPage = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                    String bookDescription = "";
+                    String authors = "";
+                    String bookLanguage = "";
+                    String downloadUrl = "";
+                    boolean areDetailsFetched = false;
+                    b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
+                    tempBook.add(b);
+                }
+            }
+            ObjectCollection.searchBook.setBooks(tempBook);
+
+    }).start();
+        }
 
 
     public static class HomePageNotifier extends Observable

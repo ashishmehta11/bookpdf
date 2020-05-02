@@ -77,7 +77,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
             if(editTextSearch.getText().toString().trim().length()>0)
             {
                 showProgressDialog();
-                //ObjectCollection.searchForBook(editTextSearch.getText().toString().trim());
+
+
+                ObjectCollection.searchForBook(editTextSearch.getText().toString().trim());
                 //TODO: Call for Searching books
             }
         });

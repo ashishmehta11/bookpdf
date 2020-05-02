@@ -43,14 +43,14 @@ public class RecyclerAdapterSearchBooks extends RecyclerView.Adapter<RecyclerAda
             if(ObjectCollection.searchBook.getTotalLoadedPage()+1<=ObjectCollection.searchBook.getTotalPage())
             {
                 //TODO: call for page number :totalLoadedPage + 1 in the search query
-                //ObjectCollection.getOneMoreSearchPage(ObjectCollection.searchBook.getTotalLoadedPage()+1);
+             ObjectCollection.getOneMoreSearchPage(ObjectCollection.searchBook.getTotalLoadedPage()+1,ObjectCollection.searchBook.getSearchUrl());
             }
         }
         Glide.with(context)
                 .load(ObjectCollection.searchBook.getBooks().get(position).getBookImageURL())
                 .into(holder.bookCover);
 
-        if (ObjectCollection.searchBook.getBooks().get(position).getBookYear() > 0)
+        if (ObjectCollection.searchBook.getBooks().get(position).getBookYear() != "")
             holder.txtYear.setText(String.valueOf(ObjectCollection.searchBook.getBooks().get(position).getBookYear()));
         else
             holder.txtYear.setText("NA");
