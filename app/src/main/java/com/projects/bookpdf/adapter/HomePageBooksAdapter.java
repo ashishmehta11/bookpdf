@@ -86,4 +86,16 @@ public class HomePageBooksAdapter extends SectionAdapter<HomePageBooksAdapter.It
             bookList=itemView.findViewById(R.id.recycler_home_page_books);
         }
     }
+
+    public String getHeaderText() {
+        return headerText;
+    }
+
+    public ArrayList<Book> getBookList() {
+        return bookList;
+    }
+
+    public boolean isThisLast() {
+        return isThisLast;
+    }
 }

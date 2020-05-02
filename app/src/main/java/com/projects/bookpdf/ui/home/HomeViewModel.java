@@ -24,6 +24,8 @@ class HomeViewModel extends ViewModel implements Observer {
     private Context context;
     private RecyclerView recyclerHomePage;
     private SectionHeaderLayout sectionHeaderLayout;
+    private SectionDataManager sectionDataManager=new SectionDataManager();
+    private short s = 1;
     HomeViewModel(Context context) {
         this.context = context;
         ObjectCollection.homePageNotifier.addObserver(HomeViewModel.this);
@@ -33,9 +35,12 @@ class HomeViewModel extends ViewModel implements Observer {
         MainActivity.showProgressDialog();
         this.recyclerHomePage = recyclerHomePage;
         this.sectionHeaderLayout = sectionHeaderLayout;
-        SectionDataManager sectionDataManager=new SectionDataManager();
+
+        RecyclerView.Adapter adapter = sectionDataManager.getAdapter();
+        this.recyclerHomePage.setAdapter(adapter);
+        this.sectionHeaderLayout.attachTo(this.recyclerHomePage, sectionDataManager);
         if(ObjectCollection.homePageBook!=null) {
-            short s = 1;
+
             for (Map.Entry<String, ArrayList<Book>> m : ObjectCollection.homePageBook.getBooks().entrySet()) {
                 boolean isLast;
                 isLast = s == ObjectCollection.homePageBook.getBooks().size();
@@ -51,20 +56,35 @@ class HomeViewModel extends ViewModel implements Observer {
             }
             MainActivity.stopProgressDialog();
         }
-        RecyclerView.Adapter adapter = sectionDataManager.getAdapter();
-        this.recyclerHomePage.setAdapter(adapter);
-        this.sectionHeaderLayout.attachTo(this.recyclerHomePage, sectionDataManager);
+
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        MainActivity.stopProgressDialog();
         if(o instanceof ObjectCollection.HomePageNotifier)
         {
-            SectionDataManager sectionDataManager=new SectionDataManager();
             if(ObjectCollection.homePageBook!=null) {
-                short s = 1;
+                if(sectionDataManager.getSectionCount()>0)
+                {
+                    HomePageBooksAdapter obj=sectionDataManager.getSectionAdapter(sectionDataManager.getSectionCount()-1);
+                    HomePageBooksAdapter homePageBooksAdapter = new HomePageBooksAdapter(
+                            true
+                            , true
+                            , context
+                            , obj.getHeaderText()
+                            , obj.getBookList()
+                            , false);
+                    s--;
+                    sectionDataManager.replaceSection(sectionDataManager.getSectionCount()-1
+                    ,homePageBooksAdapter,s);
+                    s++;
+                }
+                int i=1;
                 for (Map.Entry<String, ArrayList<Book>> m : ObjectCollection.homePageBook.getBooks().entrySet()) {
+                    if(i<=sectionDataManager.getSectionCount()) {
+                        i++;
+                        continue;
+                    }
                     boolean isLast;
                     isLast = s == ObjectCollection.homePageBook.getBooks().size();
                     HomePageBooksAdapter homePageBooksAdapter = new HomePageBooksAdapter(
@@ -76,12 +96,10 @@ class HomeViewModel extends ViewModel implements Observer {
                             , isLast);
                     sectionDataManager.addSection(homePageBooksAdapter, s);
                     s++;
+                    i++;
                 }
-                MainActivity.stopProgressDialog();
             }
-            RecyclerView.Adapter adapter = sectionDataManager.getAdapter();
-            recyclerHomePage.setAdapter(adapter);
-            sectionHeaderLayout.attachTo(recyclerHomePage, sectionDataManager);
         }
+        MainActivity.stopProgressDialog();
     }
 }
