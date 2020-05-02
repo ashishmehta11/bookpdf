@@ -1,5 +1,6 @@
 package com.projects.bookpdf.ui.bookdetail;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
@@ -20,6 +22,7 @@ import com.projects.bookpdf.activity.MainActivity;
 import com.projects.bookpdf.data.Book;
 import com.projects.bookpdf.data.ObjectCollection;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class BookDetailFragment extends Fragment implements ViewModelStoreOwner {
@@ -32,6 +35,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
     private TextView txtTitle, txtYear, txtSize, txtTotalDownloads, txtAuthor, txtPages, txtLanguage;
     private String headerText="";
     private int position=-1;
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         bookDetailViewModel =
@@ -86,7 +90,9 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                     Book b = ObjectCollection.searchBook.getBooks().get(position);
                     txtAuthor.setText(b.getAuthors());
                     txtLanguage.setText(b.getBookLanguage());
-                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl()));
+                    btnDownload.setOnClickListener(v -> {
+                        bookDetailViewModel.downloadBook(b.getDownloadUrl());
+                    });
                 }
             });
         }

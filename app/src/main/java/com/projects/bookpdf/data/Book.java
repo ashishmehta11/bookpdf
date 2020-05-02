@@ -1,7 +1,5 @@
 package com.projects.bookpdf.data;
 
-import java.util.ArrayList;
-
 public class Book {
     private int bookId;
     private String bookName;
@@ -10,14 +8,14 @@ public class Book {
     private String bookDescription;
     private String bookPage;
     private String bookLanguage;
-    private int bookYear;
+    private String bookYear;
     private String bookSize;
     private String bookTotalDownload;
     private String authors;
     private String downloadUrl;
     private boolean areDetailsFetched;
 
-    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, int bookYear, String bookSize, String bookTotalDownload,String authors,String bookLanguage,String downloadUrl,boolean areDetailsFetched) {
+    public Book(int bookId, String bookName, String bookUrl, String bookImageURL, String bookDescription, String bookPage, String bookYear, String bookSize, String bookTotalDownload,String authors,String bookLanguage,String downloadUrl,boolean areDetailsFetched) {
         this.bookId = bookId;
         this.bookName = bookName;
         this.bookUrl = bookUrl;
@@ -57,7 +55,7 @@ public class Book {
         return bookPage;
     }
 
-    public int getBookYear() {
+    public String getBookYear() {
         return bookYear;
     }
 
