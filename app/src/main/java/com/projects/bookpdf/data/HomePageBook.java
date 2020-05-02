@@ -2,13 +2,13 @@ package com.projects.bookpdf.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class HomePageBook {
 
-    private HashMap<String, ArrayList<Book>> books=new HashMap<String,ArrayList<Book>>();
+    private LinkedHashMap<String, ArrayList<Book>> books=new LinkedHashMap<String,ArrayList<Book>>();
     public static String url="https://www.pdfdrive.com";
-    public HomePageBook(HashMap<String, ArrayList<Book>> books) {
-        this.books = books;
+    public HomePageBook() {
     }
 
     public HashMap<String, ArrayList<Book>> getBooks() {

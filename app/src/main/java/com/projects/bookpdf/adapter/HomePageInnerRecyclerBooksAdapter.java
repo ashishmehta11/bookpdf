@@ -44,7 +44,7 @@ public class HomePageInnerRecyclerBooksAdapter extends RecyclerView.Adapter<Home
             tempTitle = tempTitle.substring(0, 29) + "...";
         }
         holder.txtTitle.setText(tempTitle);
-        if (bookList.get(position).getBookYear() != "")
+        if (bookList.get(position).getBookYear().length()>0)
             holder.txtYear.setText(String.valueOf(bookList.get(position).getBookYear()));
         else
             holder.txtYear.setText("NA");

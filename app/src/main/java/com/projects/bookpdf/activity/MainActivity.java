@@ -3,6 +3,7 @@ package com.projects.bookpdf.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.TaskStackBuilder;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -78,8 +80,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
             if(editTextSearch.getText().toString().trim().length()>0)
             {
                 showProgressDialog();
-
-
                 ObjectCollection.searchForBook(editTextSearch.getText().toString().trim());
                 //TODO: Call for Searching books
             }
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             if(navDestination.getId()==R.id.book_details)
             {
                 if(BookDetailFragment.cameFromHome==0||BookDetailFragment.cameFromHome==1)
-                    navController.navigate(R.id.home);
+                    navController.navigateUp();
                 else if(BookDetailFragment.cameFromHome==2)
                     navController.navigate(R.id.search);
             }
@@ -170,6 +170,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 showConfirmationDialog(getString(R.string.txt_dialog_exit_title));
         }
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return super.onSupportNavigateUp();
+    }
+
     public static void showProgressDialog()
     {
         if(!progressDialog.isShowing())

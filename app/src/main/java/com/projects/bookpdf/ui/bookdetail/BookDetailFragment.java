@@ -68,9 +68,13 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                 {
                     Book b = Objects.requireNonNull(ObjectCollection.homePageBook.getBooks().get(headerText)).get(position);
                     if(b.getAuthors().length()<=0)
-                        txtAuthor.setText("Not Available");
+                        txtAuthor.setText(getString(R.string.info_not_available));
                     else
                         txtAuthor.setText(b.getAuthors());
+                    if(b.getBookLanguage().length()<=0)
+                        txtLanguage.setText(getString(R.string.info_not_available));
+                    else
+                        txtLanguage.setText(b.getBookLanguage());
                     txtLanguage.setText(b.getBookLanguage());
                     btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl()));
                 }
@@ -92,10 +96,13 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                 {
                     Book b = ObjectCollection.searchBook.getBooks().get(position);
                     if(b.getAuthors().length()<=0)
-                        txtAuthor.setText("Not Available");
+                        txtAuthor.setText(getString(R.string.info_not_available));
                     else
                         txtAuthor.setText(b.getAuthors());
-                    txtLanguage.setText(b.getBookLanguage());
+                    if(b.getBookLanguage().length()<=0)
+                        txtLanguage.setText(getString(R.string.info_not_available));
+                    else
+                        txtLanguage.setText(b.getBookLanguage());
                     btnDownload.setOnClickListener(v -> {
                         bookDetailViewModel.downloadBook(b.getDownloadUrl());
                     });
@@ -121,25 +128,40 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
         txtTitle.setText(book.getBookName());
 
         txtLanguage = view.findViewById(R.id.txt_book_language);
-        txtLanguage.setText(book.getBookLanguage());
+        if(book.getBookLanguage().length()<=0)
+            txtLanguage.setText(getString(R.string.info_not_available));
+        else
+            txtLanguage.setText(book.getBookLanguage());
 
         txtPages = view.findViewById(R.id.txt_pages_of_book);
-        txtPages.setText(book.getBookPage().split(" ")[0]);
+        if(book.getBookPage().length()<=0)
+            txtPages.setText(getString(R.string.info_not_available));
+        else
+            txtPages.setText(book.getBookPage().split(" ")[0]);
 
         txtYear = view.findViewById(R.id.txt_year);
-        txtYear.setText(String.valueOf(book.getBookYear()));
+        if(book.getBookYear().length()<=0)
+            txtYear.setText(getString(R.string.info_not_available));
+        else
+            txtYear.setText(book.getBookYear());
 
         txtSize = view.findViewById(R.id.txt_book_size);
-        txtSize.setText(book.getBookSize());
+        if(book.getBookSize().length()<=0)
+            txtSize.setText(getString(R.string.info_not_available));
+        else
+            txtSize.setText(book.getBookSize());
 
         txtTotalDownloads = view.findViewById(R.id.txt_downloads);
-        txtTotalDownloads.setText(book.getBookTotalDownload().split(" ")[0]);
+        if(book.getBookTotalDownload().length()<=0)
+            txtTotalDownloads.setText(getString(R.string.info_not_available));
+        else
+            txtTotalDownloads.setText(book.getBookTotalDownload().split(" ")[0]);
 
         txtAuthor = view.findViewById(R.id.txt_author);
         if(book.getAuthors().length()<=0)
-        txtAuthor.setText("Not Available");
+            txtAuthor.setText(getString(R.string.info_not_available));
         else
-        txtAuthor.setText(book.getAuthors());
+            txtAuthor.setText(book.getAuthors());
 
         btnDownload = view.findViewById(R.id.material_card_download);
     }
