@@ -3,11 +3,34 @@ package com.projects.bookpdf.ui.search;
 import android.content.Context;
 
 import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.RecyclerView;
 
-class SearchViewModel extends ViewModel {
+import com.projects.bookpdf.adapter.RecyclerAdapterSearchBooks;
+import com.projects.bookpdf.data.ObjectCollection;
+
+import java.util.Observable;
+import java.util.Observer;
+
+class SearchViewModel extends ViewModel implements Observer {
     private Context context;
-
+    private RecyclerView recyclerSearchBooks;
+    private RecyclerAdapterSearchBooks recyclerAdapterSearchBooks;
     SearchViewModel(Context context) {
         this.context = context;
     }
+
+    void setAdapter(RecyclerView recyclerView) {
+        this.recyclerSearchBooks=recyclerView;
+        recyclerAdapterSearchBooks=new RecyclerAdapterSearchBooks(context);
+        this.recyclerSearchBooks.setAdapter(recyclerAdapterSearchBooks);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if(recyclerAdapterSearchBooks!=null) {
+            RecyclerAdapterSearchBooks.newIncomingDataReached=true;
+            recyclerAdapterSearchBooks.notifyDataSetChanged();
+        }
+    }
+
 }

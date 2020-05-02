@@ -244,6 +244,8 @@ public class ObjectCollection {
             }
         }).start();
     }
+
+
     public static class HomePageNotifier extends Observable
     {
         void signalHomeFragment()

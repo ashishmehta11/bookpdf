@@ -78,8 +78,10 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
             position = bundle.getInt("current_book_position");
             book = ObjectCollection.searchBook.getBooks().get(position);
             //TODO : checking and calling method to fetch book details
-            if (!book.areDetailsFetched())
+            if (!book.areDetailsFetched()) {
+                MainActivity.showProgressDialog();
                 ObjectCollection.getIndividualBookDetails(position, book.getBookUrl(), getActivity());
+            }
             initializeViews(book);
             //TODO: observer for loading remaining data
             bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(),integer -> {

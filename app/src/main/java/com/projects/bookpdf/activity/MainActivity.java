@@ -29,8 +29,10 @@ import com.projects.bookpdf.ui.bookdetail.BookDetailFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Objects;
+import java.util.Observable;
+import java.util.Observer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Observer {
     private CardView home, category, search, downloads, exit;
     private EditText editTextSearch;
     private TextView txtTitle,txtMessasge;
@@ -72,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
         searchCard=searchDialogView.findViewById(R.id.material_card_search);
         editTextSearch=searchDialogView.findViewById(R.id.edit_txt_search);
         searchCard.setOnClickListener(v -> {
-            if(editTextSearch.length()>0)
+            if(editTextSearch.getText().toString().trim().length()>0)
             {
-                searchDialog.dismiss();
-                navController.navigate(R.id.search);
+                showProgressDialog();
+                //ObjectCollection.searchForBook(editTextSearch.getText().toString().trim());
                 //TODO: Call for Searching books
             }
         });
@@ -174,5 +176,12 @@ public class MainActivity extends AppCompatActivity {
     {
         if(progressDialog.isShowing())
         progressDialog.dismiss();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        stopProgressDialog();
+        searchDialog.dismiss();
+        navController.navigate(R.id.search);
     }
 }
