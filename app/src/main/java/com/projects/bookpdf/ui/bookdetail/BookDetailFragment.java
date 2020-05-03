@@ -103,9 +103,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                         txtLanguage.setText(getString(R.string.info_not_available));
                     else
                         txtLanguage.setText(b.getBookLanguage());
-                    btnDownload.setOnClickListener(v -> {
-                        bookDetailViewModel.downloadBook(b.getDownloadUrl());
-                    });
+                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl()));
                 }
             });
         }
@@ -164,6 +162,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
             txtAuthor.setText(book.getAuthors());
 
         btnDownload = view.findViewById(R.id.material_card_download);
+        btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(book.getDownloadUrl()));
     }
 
     private String calculateTotalDownloads(String totalDownloads) {

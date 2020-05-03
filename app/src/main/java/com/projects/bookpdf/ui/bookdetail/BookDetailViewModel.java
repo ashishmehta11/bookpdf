@@ -28,11 +28,9 @@ class BookDetailViewModel extends ViewModel implements Observer {
         ObjectCollection.bookDetailNotifier.addObserver(BookDetailViewModel.this);
     }
 
-    //TODO: Download the book!! 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    //TODO: Download the book!!
     void downloadBook(String downloadUrl) {
-        Log.w("Download url f method",downloadUrl);
-
+        Log.e("Download url f method",downloadUrl);
     }
     
     @Override

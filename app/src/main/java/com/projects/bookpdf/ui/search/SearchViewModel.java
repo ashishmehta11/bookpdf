@@ -2,6 +2,7 @@ package com.projects.bookpdf.ui.search;
 
 import android.content.Context;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,9 +21,9 @@ class SearchViewModel extends ViewModel implements Observer {
         ObjectCollection.moreSearchPagesNotifier.addObserver(SearchViewModel.this);
     }
 
-    void setAdapter(RecyclerView recyclerView) {
+    void setAdapter(RecyclerView recyclerView, FragmentActivity activity) {
         this.recyclerSearchBooks=recyclerView;
-        recyclerAdapterSearchBooks=new RecyclerAdapterSearchBooks(context);
+        recyclerAdapterSearchBooks=new RecyclerAdapterSearchBooks(context,activity);
         this.recyclerSearchBooks.setAdapter(recyclerAdapterSearchBooks);
     }
 

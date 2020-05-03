@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,9 +25,11 @@ import java.util.ArrayList;
 public class RecyclerAdapterSearchBooks extends RecyclerView.Adapter<RecyclerAdapterSearchBooks.ViewHolder> {
     public static boolean newIncomingDataReached;
     private Context context;
-    public RecyclerAdapterSearchBooks(Context context) {
+    private FragmentActivity activity;
+    public RecyclerAdapterSearchBooks(Context context,FragmentActivity activity) {
         this.context = context;
         newIncomingDataReached=true;
+        this.activity=activity;
     }
 
     @NonNull
@@ -43,8 +47,20 @@ public class RecyclerAdapterSearchBooks extends RecyclerView.Adapter<RecyclerAda
             if(ObjectCollection.searchBook.getTotalLoadedPage()+1<=ObjectCollection.searchBook.getTotalPage())
             {
                 //TODO: call for page number :totalLoadedPage + 1 in the search query
-             ObjectCollection.getOneMoreSearchPage(ObjectCollection.searchBook.getTotalLoadedPage()+1,ObjectCollection.searchBook.getSearchUrl());
+                ObjectCollection.getOneMoreSearchPage(ObjectCollection.searchBook.getTotalLoadedPage()+1,ObjectCollection.searchBook.getSearchUrl(),activity);
             }
+        }
+        if(position==ObjectCollection.searchBook.getBooks().size()-1)
+        {
+            RecyclerView.LayoutParams params= (RecyclerView.LayoutParams) holder.itemCard.getLayoutParams();
+            params.bottomMargin=200;
+            holder.itemCard.setLayoutParams(params);
+        }
+        else
+        {
+            RecyclerView.LayoutParams params= (RecyclerView.LayoutParams) holder.itemCard.getLayoutParams();
+            params.bottomMargin=8;
+            holder.itemCard.setLayoutParams(params);
         }
         Glide.with(context)
                 .load(ObjectCollection.searchBook.getBooks().get(position).getBookImageURL())
@@ -57,7 +73,7 @@ public class RecyclerAdapterSearchBooks extends RecyclerView.Adapter<RecyclerAda
 
         holder.txtTitle.setText(ObjectCollection.searchBook.getBooks().get(position).getBookName());
 
-        holder.bookCover.setOnClickListener(v -> {
+        holder.itemCard.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putBoolean("coming_from_home",false);
             bundle.putBoolean("coming_from_search",true);

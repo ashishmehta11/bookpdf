@@ -9,10 +9,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
-
-import com.bumptech.glide.signature.ObjectKey;
-import com.projects.bookpdf.R;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +32,6 @@ public class ObjectCollection {
         try {
 //                TODO:: get Original home page book
             currHomePageCats = 0;
-
             Document doc = Jsoup.connect(HomePageBook.url).get();
             Elements allBooks = doc.select("[class=files-new]");
             Elements cats = doc.select("[class=collection-title mb-2]");
@@ -70,17 +65,18 @@ public class ObjectCollection {
                         }
                     }
                     ObjectCollection.homePageBook.getBooks().put(cats.get(catIndex++).select("a").text(), tempBook);
-                    activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
+
                 }
             }
-            activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
+            activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment(0));
+            ArrayList<Book> tempBook ;
 //               TODO:: Manually add category for home page book
             HashMap<String, String> categoryWiseBooks = new HashMap<String, String>();
             categoryWiseBooks.put("Hacking", "https://www.pdfdrive.com/certified-ethical-hacker-books.html");
             categoryWiseBooks.put("Politics & Laws", "https://www.pdfdrive.com/category/15");
             categoryWiseBooks.put("Technology and Development", "https://www.pdfdrive.com/search?q=latest+developments&pagecount=&pubyear=2015");
 //          TODO:: Get category wise book
-            ArrayList<Book> tempBook = null;
+
             for (Map.Entry categoryWiseBook : categoryWiseBooks.entrySet()) {
                 doc = Jsoup.connect(categoryWiseBook.getValue().toString()).get();
                 Elements books = doc.select("[class=files-new]");
@@ -106,11 +102,10 @@ public class ObjectCollection {
                     }
                 }
                 ObjectCollection.homePageBook.getBooks().put(categoryWiseBook.getKey().toString(), tempBook);
-                activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
+                activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment(0));
             }
-            tempBook=null;
             tempBook = new ArrayList<Book>();
-            HashMap<String, String> special = new HashMap<String,String>();
+            HashMap<String, String> special = new HashMap<>();
             special.put("https://www.pdfdrive.com/search?q=chanakya%20neeti&more=true", "https://www.pdfdrive.com/chanakya-neeti-e196841625.html");
             special.put("https://www.pdfdrive.com/search?q=Kamasutra+VATSYAYANA", "https://www.pdfdrive.com/kamasutra-vatsyayana-e34555033.html");
             special.put("https://www.pdfdrive.com/rich-dad-poor-dad-books.html", "https://www.pdfdrive.com/rich-dad-poor-dad-e136494023.html");
@@ -151,42 +146,15 @@ public class ObjectCollection {
                     }
                 }
             }
-            ObjectCollection.homePageBook.getBooks().put("Book pdf special",tempBook);
-            //TODO : To temporary make the application work , uncomment the below code.
-            activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
+            ObjectCollection.homePageBook.getBooks().put("Special Books by Us",tempBook);
+            activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment(1));
 
-            //TODO: All the categories are not being loaded in home page accoridng to pdf drive.
-            totalNoOfHomePageCatsLeft = 1;//TODO: make this digit dynamic!
-            for (int i = 1; i <= totalNoOfHomePageCatsLeft; i++) {
-                //  loadRemainingHomePageBooks(activity);
-            }
         } catch (Exception e) {
             Log.e("setHomePageBook", "execetion : " + e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));
         }
     }).start();
 }
 
-
-
-
-    private static void loadRemainingHomePageBooks(Activity activity)
-    {
-        new Thread(() -> {
-            try
-            {
-
-                //TODO: write code here...
-                currHomePageCats++;
-                if(currHomePageCats>=totalNoOfHomePageCatsLeft)
-                    activity.runOnUiThread(() -> homePageNotifier.signalHomeFragment());
-            }
-            catch (Exception e)
-            {
-                Log.e("loadRemainingHomeBooks","Exception : "+e.getMessage()+"\n\n"+ Arrays.toString(e.getStackTrace()));
-            }
-        }).start();
-
-    }
     //TODO: use this method to load book details from home page object
     public static void getIndividualBookDetails(String headerText, int position, String bookUrl,FragmentActivity activity)
     {
@@ -222,7 +190,14 @@ public class ObjectCollection {
                 String authors="";
                 String downloadUrl="";
                 //TODO: Write code here and fill the variables above by using 'bookUrl' parameter.
-
+                Log.e("Book Url k:-",bookUrl);
+                //TODO: Write code here and fill the variables above by using 'bookUrl' parameter.
+                Document getDataFromBookUrl = Jsoup.connect(bookUrl).get();
+                String sessionId=getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-preview").toString();
+                String dataId=getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-id").toString();
+                downloadUrl="https://www.pdfdrive.com/download.pdf?id="+dataId+"&h="+sessionId.split("session=")[1]+"&u=cache&ext=pdf";
+                authors=getDataFromBookUrl.select("[itemprop=creator]").text().toString();
+                bookLanguage=getDataFromBookUrl.select("[class=info-green]").last().text().toString();
 
                 //TODO: Don't touch below code!
                 Objects.requireNonNull(searchBook.getBooks()).get(position).setBookLanguage(bookLanguage);
@@ -236,16 +211,16 @@ public class ObjectCollection {
         }).start();
     }
 
-    public static void searchForBook(String query) {
+    public static void searchForBook(String query,Activity activity) {
         new Thread(() -> {
         try {
-            ArrayList<Book> tempBook=new ArrayList<>();
             String searchQuery=query.replace(" ","+");
             String searchUrl="https://www.pdfdrive.com/search?q="+searchQuery;
-            Document doc = null;
+            Document doc ;
             doc = Jsoup.connect(searchUrl).get();
             Elements books = doc.select("[class=files-new]");
             int totalPage=Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
+            searchBook=new SearchBook(searchUrl,query,totalPage);
             for(int subIndex=0;subIndex<books.select("li").size();subIndex++)
             {
                 Book b;
@@ -264,10 +239,10 @@ public class ObjectCollection {
                     String downloadUrl="";
                     boolean areDetailsFetched=false;
                     b=new Book(bookId,bookName, bookUrl, bookImageUrl,bookDescription, bookPage,bookYear,bookSize,bookTotalDownload,authors,bookLanguage,downloadUrl,areDetailsFetched);
-                    tempBook.add(b);
+                    searchBook.getBooks().add(b);
                 }
             }
-            searchBook=new SearchBook(tempBook,searchUrl,searchQuery,totalPage);
+            activity.runOnUiThread(() ->searchResultNotifier.notifyHomeActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -275,14 +250,13 @@ public class ObjectCollection {
         }).start();
     }
 
-    public static void getOneMoreSearchPage(int pageNo, String searchUrl) {
-        ArrayList<Book> tempBook=new ArrayList<>();
+    public static void getOneMoreSearchPage(int pageNo, String searchUrl,FragmentActivity activity) {
         searchUrl+="&page="+pageNo;
         Log.e("Search Url",searchUrl);
         final String finalSearchUrl = searchUrl;
         new Thread(() -> {
             try {
-                Document doc = null;
+                Document doc;
                 doc = Jsoup.connect(finalSearchUrl).get();
                 Elements books = doc.select("[class=files-new]");
                 int totalPage=Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
@@ -303,8 +277,13 @@ public class ObjectCollection {
                         String downloadUrl = "";
                         boolean areDetailsFetched = false;
                         b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
-                        ObjectCollection.searchBook.getBooks().add(b);
+                        searchBook.getBooks().add(b);
                     }
+                }
+                activity.runOnUiThread(() -> moreSearchPagesNotifier.searchViewModelNotifier());
+                if(books.select("li").size()>0)
+                {
+                    searchBook.setTotalLoadedPage(searchBook.getTotalLoadedPage()+1);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -315,10 +294,10 @@ public class ObjectCollection {
 
     public static class HomePageNotifier extends Observable
     {
-        void signalHomeFragment()
+        void signalHomeFragment(int i)
         {
             setChanged();
-            notifyObservers();
+            notifyObservers(i);
         }
     }
 
@@ -342,7 +321,7 @@ public class ObjectCollection {
 
     public static class MoreSearchPagesNotifier extends Observable
     {
-        void searchViewModel()
+        void searchViewModelNotifier()
         {
             setChanged();
             notifyObservers();

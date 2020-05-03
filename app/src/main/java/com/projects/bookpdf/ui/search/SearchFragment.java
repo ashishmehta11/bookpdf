@@ -18,20 +18,20 @@ import com.projects.bookpdf.data.MainActivityData;
 import com.projects.bookpdf.data.ObjectCollection;
 
 public class SearchFragment extends Fragment implements ViewModelStoreOwner {
-
-    private SearchViewModel searchViewModel;
-    private View view;
+    public static SearchViewModel searchViewModel=null;
+    public static View view=null;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
+        if(searchViewModel==null)
         searchViewModel =
                 new ViewModelProvider(SearchFragment.this,
                         new SearchViewModelFactory(requireContext()))
                 .get(SearchViewModel.class);
-        view= inflater.inflate(R.layout.fragment_search, container, false);
-        RecyclerView recyclerView=view.findViewById(R.id.recycler_search_books);
-        searchViewModel.setAdapter(recyclerView);
+        if(view==null) {
+            view = inflater.inflate(R.layout.fragment_search, container, false);
+            RecyclerView recyclerView = view.findViewById(R.id.recycler_search_books);
+            searchViewModel.setAdapter(recyclerView, getActivity());
+        }
         return view;
     }
     @Override

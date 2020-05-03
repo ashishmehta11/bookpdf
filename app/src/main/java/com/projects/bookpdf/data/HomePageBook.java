@@ -13,12 +13,8 @@ public class HomePageBook {
     public HomePageBook() {
     }
 
-    public HashMap<String, ArrayList<Book>> getBooks() {
+    public LinkedHashMap<String, ArrayList<Book>> getBooks() {
         return books;
-    }
-    public void setBooks(String key,ArrayList<Book> book) {
-//        this.books.remove(key);
-        this.books.replace(key,book);
     }
 
     @Override

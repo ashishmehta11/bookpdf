@@ -45,10 +45,10 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/material_card_yes"
-        app:cardCornerRadius="0dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#000000"
+        app:cardCornerRadius="0dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView4"

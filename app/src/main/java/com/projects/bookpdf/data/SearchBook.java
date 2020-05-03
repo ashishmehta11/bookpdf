@@ -3,16 +3,13 @@ package com.projects.bookpdf.data;
 import java.util.ArrayList;
 
 public class SearchBook {
-
-
-    private ArrayList<Book> books=new ArrayList<Book>();
+    private ArrayList<Book> books= new ArrayList<>();
     private String searchUrl;
     private String searchQuery;
     private int totalPage;
     private int totalLoadedPage=1;
 
-    public SearchBook(ArrayList<Book> books,String searchUrl, String searchQuery, int totalPage) {
-        this.books = books;
+    public SearchBook(String searchUrl, String searchQuery, int totalPage) {
         this.searchUrl = searchUrl;
         this.searchQuery = searchQuery;
         this.totalPage = totalPage;
@@ -38,5 +35,9 @@ public class SearchBook {
 
     public int getTotalLoadedPage() {
         return totalLoadedPage;
+    }
+
+    public void setTotalLoadedPage(int totalLoadedPage) {
+        this.totalLoadedPage = totalLoadedPage;
     }
 }

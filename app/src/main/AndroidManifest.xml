@@ -15,6 +15,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="locked"
             android:theme="@style/AppMaterialTheme"/>
         <activity android:name=".activity.SplashScreen">
             <intent-filter>

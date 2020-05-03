@@ -3,8 +3,10 @@ package com.projects.bookpdf.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -28,6 +30,7 @@ import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
 import com.projects.bookpdf.data.ObjectCollection;
 import com.projects.bookpdf.ui.bookdetail.BookDetailFragment;
+import com.projects.bookpdf.ui.search.SearchFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Objects;
@@ -53,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         progressView=getLayoutInflater().inflate(R.layout.progress_wheel,null,false);
         progressDialog=new Dialog(MainActivity.this,R.style.Theme_AppCompat_Light_Dialog_Alert);
         progressDialog.setContentView(progressView);
-        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setOnCancelListener(dialog -> onBackPressed());
         Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         SpinKitView progressDialog=progressView.findViewById(R.id.spin_kit);
         Sprite sprite=new FadingCircle();
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             if(editTextSearch.getText().toString().trim().length()>0)
             {
                 showProgressDialog();
-                ObjectCollection.searchForBook(editTextSearch.getText().toString().trim());
+                ObjectCollection.searchForBook(editTextSearch.getText().toString().trim(),MainActivity.this);
                 //TODO: Call for Searching books
             }
         });
@@ -115,7 +119,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
         //TODO: NavController.
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            MainActivityData.title = destination.getLabel().toString();
+            if(destination.getId()==R.id.search&&ObjectCollection.searchBook!=null)
+                MainActivityData.title = ObjectCollection.searchBook.getSearchQuery();
+            else
+                MainActivityData.title = destination.getLabel().toString();
             txtTitle.setText(MainActivityData.title);
         });
 
@@ -192,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
         if(o instanceof ObjectCollection.SearchResultNotifier) {
             stopProgressDialog();
             searchDialog.dismiss();
+            SearchFragment.view=null;
+            SearchFragment.searchViewModel=null;
+            Log.e("AJM","Below setting search fragment view and vm = null");
             navController.navigate(R.id.search);
         }
     }
