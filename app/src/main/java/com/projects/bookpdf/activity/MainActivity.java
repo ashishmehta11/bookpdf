@@ -2,12 +2,8 @@ package com.projects.bookpdf.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -15,17 +11,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.TaskStackBuilder;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.ChasingDots;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
 import com.projects.bookpdf.data.ObjectCollection;
@@ -40,12 +33,15 @@ import java.util.Observer;
 public class MainActivity extends AppCompatActivity implements Observer {
     private CardView home, category, search, downloads, exit;
     private EditText editTextSearch;
-    private TextView txtTitle,txtMessasge;
+    private TextView txtTitle,txtMessage;
+    private static TextView txtSuccessDialogInfo,txtFailureDialogInfo,txtInfoDialogInfo;
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private NavController navController;
-    private View confirmDialogView,searchDialogView,progressView;
+    private View confirmDialogView,searchDialogView,progressView,successDialogView,failureDialogView,infoDialogView;
     private AlertDialog confirmDialog,searchDialog;
+    private static AlertDialog successDialog,infoDialog,failureDialog;
     private MaterialCardView yesCard,noCard,searchCard;
+    private static MaterialCardView successDialogOkCard,failureDialogOkCard,infoDialogOkCard;
     public static Dialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +59,44 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Sprite sprite=new FadingCircle();
         sprite.setColor(R.color.colorPrimary);
         progressDialog.setIndeterminateDrawable(sprite);
+
+        //TODO : creating success dialog
+        successDialogView=getLayoutInflater().inflate(R.layout.success_dialog,null);
+        AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        builder.setView(successDialogView);
+        successDialog=builder.create();
+        successDialogOkCard=successDialogView.findViewById(R.id.material_card_ok);
+        txtSuccessDialogInfo=successDialogView.findViewById(R.id.txt_info);
+        successDialogOkCard.setOnClickListener(v -> successDialog.dismiss());
+
+        //TODO : creating failure dialog
+        failureDialogView=getLayoutInflater().inflate(R.layout.failure_dialog,null);
+        builder=new AlertDialog.Builder(MainActivity.this);
+        builder.setView(failureDialogView);
+        failureDialog=builder.create();
+        failureDialogOkCard=failureDialogView.findViewById(R.id.material_card_ok);
+        txtFailureDialogInfo=failureDialogView.findViewById(R.id.txt_info);
+        failureDialogOkCard.setOnClickListener(v -> failureDialog.dismiss());
+
+        //TODO : creating Info dialog
+        infoDialogView=getLayoutInflater().inflate(R.layout.info_dialog,null);
+        builder=new AlertDialog.Builder(MainActivity.this);
+        builder.setView(infoDialogView);
+        infoDialog=builder.create();
+        infoDialogOkCard=infoDialogView.findViewById(R.id.material_card_ok);
+        txtInfoDialogInfo=infoDialogView.findViewById(R.id.txt_info);
+        infoDialogOkCard.setOnClickListener(v -> infoDialog.dismiss());
+
         //TODO: Initializing and creating views for confirmation dialog
         confirmDialogView=getLayoutInflater().inflate(R.layout.confirm_dialog,null);
-        AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        builder=new AlertDialog.Builder(MainActivity.this);
         builder.setView(confirmDialogView);
         confirmDialog= builder.create();
         yesCard=confirmDialogView.findViewById(R.id.material_card_yes);
         yesCard.setOnClickListener(v -> finish());
         noCard=confirmDialogView.findViewById(R.id.material_card_no);
         noCard.setOnClickListener(v -> confirmDialog.dismiss());
-        txtMessasge=confirmDialogView.findViewById(R.id.txt_confirm_dialog_text);
+        txtMessage=confirmDialogView.findViewById(R.id.txt_confirm_dialog_text);
 
         //TODO: Initializing and creating views for search dialog
         searchDialogView=getLayoutInflater().inflate(R.layout.search_dialog,null);
@@ -153,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private void showConfirmationDialog(String msg) {
-        txtMessasge.setText(msg);
+        txtMessage.setText(msg);
         confirmDialog.show();
     }
 
@@ -188,10 +212,29 @@ public class MainActivity extends AppCompatActivity implements Observer {
         if(!progressDialog.isShowing())
         progressDialog.show();
     }
+
     public static void stopProgressDialog()
     {
         if(progressDialog.isShowing())
         progressDialog.dismiss();
+    }
+
+    public static void showFailureDialog(String msg)
+    {
+        txtFailureDialogInfo.setText(msg);
+        failureDialog.show();
+    }
+
+    public static void showSuccessDialog(String msg)
+    {
+        txtSuccessDialogInfo.setText(msg);
+        successDialog.show();
+    }
+
+    public static void showInfoDialog(String msg)
+    {
+        txtInfoDialogInfo.setText(msg);
+        infoDialog.show();
     }
 
     @Override
