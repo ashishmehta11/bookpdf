@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/material_card_search_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,16 +28,18 @@
             android:id="@+id/txt_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:gravity="center"
             android:text="Systems Thinking, : Managing Chaos and Complexity: A Platform for Designing Business Architecture asdsadsad sadsdsad asdsadasd sadsd"
             android:textColor="@color/text_color_black"
             android:textSize="@dimen/text_size"
             app:layout_constraintBottom_toBottomOf="@+id/img_book_cover"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/img_book_cover"
             app:layout_constraintTop_toTopOf="@+id/img_book_cover"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/txt_year"
@@ -48,6 +49,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="TextView"
+            android:textColor="@android:color/darker_gray"
             android:textAlignment="center"
             android:textSize="@dimen/small_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -60,8 +62,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:text="Publication Year  -"
+            android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/small_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/img_book_cover"

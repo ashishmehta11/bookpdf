@@ -1,14 +1,15 @@
 package com.projects.bookpdf.data;
 
+import android.app.Activity;
+import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.app.Activity;
-import android.util.Log;
-
-import androidx.fragment.app.FragmentActivity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -242,9 +243,11 @@ public class ObjectCollection {
                     searchBook.getBooks().add(b);
                 }
             }
-            activity.runOnUiThread(() ->searchResultNotifier.notifyHomeActivity());
-        } catch (IOException e) {
-            e.printStackTrace();
+            activity.runOnUiThread(() ->searchResultNotifier.notifyHomeActivity(0));
+        } catch (Exception e) {
+            Log.e("searchForBook","exception : "+e.getMessage());
+            Log.e("searchForBook","exception : "+ Arrays.toString(e.getStackTrace()));
+            activity.runOnUiThread(() ->searchResultNotifier.notifyHomeActivity(-1));
         }
 
         }).start();
@@ -312,10 +315,10 @@ public class ObjectCollection {
 
     public static class SearchResultNotifier extends Observable
     {
-        void notifyHomeActivity()
+        void notifyHomeActivity(int i)
         {
             setChanged();
-            notifyObservers();
+            notifyObservers(i);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.projects.bookpdf.ui.home;
 
 import android.content.Context;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Handler;
+
 
 class HomeViewModel extends ViewModel implements Observer {
     private Context context;

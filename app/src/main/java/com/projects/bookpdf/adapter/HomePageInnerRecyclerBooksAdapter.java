@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,7 +49,7 @@ public class HomePageInnerRecyclerBooksAdapter extends RecyclerView.Adapter<Home
             holder.txtYear.setText(String.valueOf(bookList.get(position).getBookYear()));
         else
             holder.txtYear.setText("NA");
-        holder.imgBook.setOnClickListener(v -> {
+        holder.holderCard.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putBoolean("coming_from_home",true);
             bundle.putBoolean("coming_from_search",false);
@@ -66,12 +67,13 @@ public class HomePageInnerRecyclerBooksAdapter extends RecyclerView.Adapter<Home
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtTitle, txtYear;
         ImageView imgBook;
-
+        CardView holderCard;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtTitle = itemView.findViewById(R.id.txt_book_title);
             txtYear = itemView.findViewById(R.id.txt_year);
             imgBook = itemView.findViewById(R.id.book_image);
+            holderCard=itemView.findViewById(R.id.card_view_holder);
         }
     }
 }

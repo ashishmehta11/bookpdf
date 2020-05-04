@@ -1,18 +1,17 @@
 package com.projects.bookpdf.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cruxlab.sectionedrecyclerview.lib.BaseSectionAdapter;
 import com.cruxlab.sectionedrecyclerview.lib.SectionAdapter;
-import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.Book;
 
@@ -69,7 +68,7 @@ public class HomePageBooksAdapter extends SectionAdapter<HomePageBooksAdapter.It
 
     static class HeaderViewHolder extends BaseSectionAdapter.HeaderViewHolder
     {
-        MaterialCardView headerCard;
+        CardView headerCard;
         TextView headerText;
         HeaderViewHolder(View itemView) {
             super(itemView);

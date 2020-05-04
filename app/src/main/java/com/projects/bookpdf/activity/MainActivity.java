@@ -3,6 +3,7 @@ package com.projects.bookpdf.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,7 +23,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
 import com.projects.bookpdf.data.ObjectCollection;
-import com.projects.bookpdf.ui.bookdetail.BookDetailFragment;
+import com.projects.bookpdf.ui.home.HomeFragment;
 import com.projects.bookpdf.ui.search.SearchFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -31,93 +32,122 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity implements Observer {
+    public static Dialog progressDialog;
+    private static TextView txtSuccessDialogInfo, txtFailureDialogInfo, txtInfoDialogInfo;
+    private static AlertDialog successDialog, infoDialog, failureDialog;
+    private static MaterialCardView successDialogOkCard, failureDialogOkCard, infoDialogOkCard;
     private CardView home, category, search, downloads, exit;
     private EditText editTextSearch;
-    private TextView txtTitle,txtMessage;
-    private static TextView txtSuccessDialogInfo,txtFailureDialogInfo,txtInfoDialogInfo;
+    private TextView txtTitle, txtMessage;
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private NavController navController;
-    private View confirmDialogView,searchDialogView,progressView,successDialogView,failureDialogView,infoDialogView;
-    private AlertDialog confirmDialog,searchDialog;
-    private static AlertDialog successDialog,infoDialog,failureDialog;
-    private MaterialCardView yesCard,noCard,searchCard;
-    private static MaterialCardView successDialogOkCard,failureDialogOkCard,infoDialogOkCard;
-    public static Dialog progressDialog;
+    private View confirmDialogView, searchDialogView, progressView, successDialogView, failureDialogView, infoDialogView;
+    private AlertDialog confirmDialog, searchDialog;
+    private MaterialCardView yesCard, noCard, searchCard;
+
+    public static void showProgressDialog() {
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+
+    public static void stopProgressDialog() {
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
+    }
+
+    public static void showFailureDialog(String msg) {
+        txtFailureDialogInfo.setText(msg);
+        failureDialog.show();
+    }
+
+    public static void showSuccessDialog(String msg) {
+        txtSuccessDialogInfo.setText(msg);
+        successDialog.show();
+    }
+
+    public static void showInfoDialog(String msg) {
+        txtInfoDialogInfo.setText(msg);
+        infoDialog.show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO: setting permission to share image
+        StrictMode.VmPolicy.Builder builder1 = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder1.build());
+
         setContentView(R.layout.activity_main);
         ObjectCollection.searchResultNotifier.addObserver(MainActivity.this);
         //TODO: setting progress dialog
-        progressView=getLayoutInflater().inflate(R.layout.progress_wheel,null,false);
-        progressDialog=new Dialog(MainActivity.this,R.style.Theme_AppCompat_Light_Dialog_Alert);
+        progressView = getLayoutInflater().inflate(R.layout.progress_wheel, null, false);
+        progressDialog = new Dialog(MainActivity.this, R.style.Theme_AppCompat_Light_Dialog_Alert);
         progressDialog.setContentView(progressView);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setOnCancelListener(dialog -> onBackPressed());
         Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        SpinKitView progressDialog=progressView.findViewById(R.id.spin_kit);
-        Sprite sprite=new FadingCircle();
+        SpinKitView progressDialog = progressView.findViewById(R.id.spin_kit);
+        Sprite sprite = new FadingCircle();
         sprite.setColor(R.color.colorPrimary);
         progressDialog.setIndeterminateDrawable(sprite);
 
         //TODO : creating success dialog
-        successDialogView=getLayoutInflater().inflate(R.layout.success_dialog,null);
-        AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        successDialogView = getLayoutInflater().inflate(R.layout.success_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setView(successDialogView);
-        successDialog=builder.create();
-        successDialogOkCard=successDialogView.findViewById(R.id.material_card_ok);
-        txtSuccessDialogInfo=successDialogView.findViewById(R.id.txt_info);
+        successDialog = builder.create();
+        successDialogOkCard = successDialogView.findViewById(R.id.material_card_ok);
+        txtSuccessDialogInfo = successDialogView.findViewById(R.id.txt_info);
         successDialogOkCard.setOnClickListener(v -> successDialog.dismiss());
 
         //TODO : creating failure dialog
-        failureDialogView=getLayoutInflater().inflate(R.layout.failure_dialog,null);
-        builder=new AlertDialog.Builder(MainActivity.this);
+        failureDialogView = getLayoutInflater().inflate(R.layout.failure_dialog, null);
+        builder = new AlertDialog.Builder(MainActivity.this);
         builder.setView(failureDialogView);
-        failureDialog=builder.create();
-        failureDialogOkCard=failureDialogView.findViewById(R.id.material_card_ok);
-        txtFailureDialogInfo=failureDialogView.findViewById(R.id.txt_info);
+        failureDialog = builder.create();
+        failureDialogOkCard = failureDialogView.findViewById(R.id.material_card_ok);
+        txtFailureDialogInfo = failureDialogView.findViewById(R.id.txt_info);
         failureDialogOkCard.setOnClickListener(v -> failureDialog.dismiss());
 
         //TODO : creating Info dialog
-        infoDialogView=getLayoutInflater().inflate(R.layout.info_dialog,null);
-        builder=new AlertDialog.Builder(MainActivity.this);
+        infoDialogView = getLayoutInflater().inflate(R.layout.info_dialog, null);
+        builder = new AlertDialog.Builder(MainActivity.this);
         builder.setView(infoDialogView);
-        infoDialog=builder.create();
-        infoDialogOkCard=infoDialogView.findViewById(R.id.material_card_ok);
-        txtInfoDialogInfo=infoDialogView.findViewById(R.id.txt_info);
+        infoDialog = builder.create();
+        infoDialogOkCard = infoDialogView.findViewById(R.id.material_card_ok);
+        txtInfoDialogInfo = infoDialogView.findViewById(R.id.txt_info);
         infoDialogOkCard.setOnClickListener(v -> infoDialog.dismiss());
 
         //TODO: Initializing and creating views for confirmation dialog
-        confirmDialogView=getLayoutInflater().inflate(R.layout.confirm_dialog,null);
-        builder=new AlertDialog.Builder(MainActivity.this);
+        confirmDialogView = getLayoutInflater().inflate(R.layout.confirm_dialog, null);
+        builder = new AlertDialog.Builder(MainActivity.this);
         builder.setView(confirmDialogView);
-        confirmDialog= builder.create();
-        yesCard=confirmDialogView.findViewById(R.id.material_card_yes);
+        confirmDialog = builder.create();
+        yesCard = confirmDialogView.findViewById(R.id.material_card_yes);
         yesCard.setOnClickListener(v -> finish());
-        noCard=confirmDialogView.findViewById(R.id.material_card_no);
+        noCard = confirmDialogView.findViewById(R.id.material_card_no);
         noCard.setOnClickListener(v -> confirmDialog.dismiss());
-        txtMessage=confirmDialogView.findViewById(R.id.txt_confirm_dialog_text);
+        txtMessage = confirmDialogView.findViewById(R.id.txt_confirm_dialog_text);
 
         //TODO: Initializing and creating views for search dialog
-        searchDialogView=getLayoutInflater().inflate(R.layout.search_dialog,null);
-        builder=new AlertDialog.Builder(MainActivity.this);
+        searchDialogView = getLayoutInflater().inflate(R.layout.search_dialog, null);
+        builder = new AlertDialog.Builder(MainActivity.this);
         builder.setView(searchDialogView);
-        searchCard=searchDialogView.findViewById(R.id.material_card_search);
-        editTextSearch=searchDialogView.findViewById(R.id.edit_txt_search);
+        searchCard = searchDialogView.findViewById(R.id.material_card_search);
+        editTextSearch = searchDialogView.findViewById(R.id.edit_txt_search);
         searchCard.setOnClickListener(v -> {
-            if(editTextSearch.getText().toString().trim().length()>0)
-            {
+            if (editTextSearch.getText().toString().trim().length() > 0) {
                 showProgressDialog();
-                ObjectCollection.searchForBook(editTextSearch.getText().toString().trim(),MainActivity.this);
+                ObjectCollection.searchForBook(editTextSearch.getText().toString().trim(), MainActivity.this);
                 //TODO: Call for Searching books
             }
         });
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
-            if(actionId== EditorInfo.IME_ACTION_GO)
+            if (actionId == EditorInfo.IME_ACTION_GO)
                 searchCard.callOnClick();
             return false;
         });
-        searchDialog=builder.create();
+        searchDialog = builder.create();
 
         txtTitle = findViewById(R.id.txt_title);
         txtTitle.setText(MainActivityData.title);
@@ -143,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         //TODO: NavController.
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if(destination.getId()==R.id.search&&ObjectCollection.searchBook!=null)
+            if (destination.getId() == R.id.search && ObjectCollection.searchBook != null)
                 MainActivityData.title = ObjectCollection.searchBook.getSearchQuery();
             else
                 MainActivityData.title = destination.getLabel().toString();
@@ -186,16 +216,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
         if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         else {
-            NavDestination navDestination=navController.getCurrentDestination();
+            NavDestination navDestination = navController.getCurrentDestination();
             assert navDestination != null;
-            if(navDestination.getId()==R.id.book_details)
-            {
-                if(BookDetailFragment.cameFromHome==0||BookDetailFragment.cameFromHome==1)
-                    navController.navigateUp();
-                else if(BookDetailFragment.cameFromHome==2)
-                    navController.navigate(R.id.search);
-            }
-            else if (navDestination.getId()!=R.id.home)
+            if (navDestination.getId() == R.id.book_details)
+                navController.navigateUp();
+            else if (navDestination.getId()==R.id.downloads)
+                navController.navigateUp();
+            else if (navDestination.getId() != R.id.home)
                 navController.navigate(R.id.home);
             else
                 showConfirmationDialog(getString(R.string.txt_dialog_exit_title));
@@ -207,45 +234,26 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return super.onSupportNavigateUp();
     }
 
-    public static void showProgressDialog()
-    {
-        if(!progressDialog.isShowing())
-        progressDialog.show();
-    }
-
-    public static void stopProgressDialog()
-    {
-        if(progressDialog.isShowing())
-        progressDialog.dismiss();
-    }
-
-    public static void showFailureDialog(String msg)
-    {
-        txtFailureDialogInfo.setText(msg);
-        failureDialog.show();
-    }
-
-    public static void showSuccessDialog(String msg)
-    {
-        txtSuccessDialogInfo.setText(msg);
-        successDialog.show();
-    }
-
-    public static void showInfoDialog(String msg)
-    {
-        txtInfoDialogInfo.setText(msg);
-        infoDialog.show();
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof ObjectCollection.SearchResultNotifier) {
+            stopProgressDialog();
+            searchDialog.dismiss();
+            if ((int) arg == 0) {
+                SearchFragment.view = null;
+                SearchFragment.searchViewModel = null;
+                Log.e("AJM", "Below setting search fragment view and vm = null");
+                navController.navigate(R.id.search);
+            } else if ((int) arg == -1) {
+                showInfoDialog("Sorry, something unexpected occurred!\nTry again with a different search query");
+            }
+        }
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        if(o instanceof ObjectCollection.SearchResultNotifier) {
-            stopProgressDialog();
-            searchDialog.dismiss();
-            SearchFragment.view=null;
-            SearchFragment.searchViewModel=null;
-            Log.e("AJM","Below setting search fragment view and vm = null");
-            navController.navigate(R.id.search);
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        HomeFragment.homeViewModel = null;
+        HomeFragment.view = null;
     }
 }

@@ -6,15 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.category.CategoryFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Downloads Fragment"
-        android:textSize="@dimen/bigger_text_size"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_downloaded_books"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_width="match_parent"
+        android:background="@color/bg_color"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

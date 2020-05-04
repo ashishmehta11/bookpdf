@@ -17,8 +17,8 @@ import com.projects.bookpdf.R;
 
 public class HomeFragment extends Fragment implements ViewModelStoreOwner {
 
-    private static View view = null;
-    private static HomeViewModel homeViewModel=null;
+    public static View view = null;
+    public static HomeViewModel homeViewModel=null;
     private SectionHeaderLayout sectionHeaderLayout;
     private RecyclerView recyclerHomePage;
 

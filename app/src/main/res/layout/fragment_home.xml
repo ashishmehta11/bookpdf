@@ -20,6 +20,7 @@
             android:id="@+id/recycler_view_home_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/bg_color"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </com.cruxlab.sectionedrecyclerview.lib.SectionHeaderLayout>
 

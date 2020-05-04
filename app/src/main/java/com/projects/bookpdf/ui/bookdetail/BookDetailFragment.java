@@ -75,7 +75,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                     else
                         txtLanguage.setText(b.getBookLanguage());
                     txtLanguage.setText(b.getBookLanguage());
-                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName()));
+                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName(),b.getBookImageURL()));
                 }
             });
         }
@@ -102,7 +102,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                         txtLanguage.setText(getString(R.string.info_not_available));
                     else
                         txtLanguage.setText(b.getBookLanguage());
-                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName()));
+                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName(),b.getBookImageURL()));
                 }
             });
         }
@@ -161,7 +161,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
             txtAuthor.setText(book.getAuthors());
 
         btnDownload = view.findViewById(R.id.material_card_download);
-        btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(book.getDownloadUrl(),book.getBookName()));
+        btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(book.getDownloadUrl(),book.getBookName(),book.getBookImageURL()));
     }
 
     private String calculateTotalDownloads(String totalDownloads) {

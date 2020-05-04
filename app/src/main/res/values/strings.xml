@@ -35,4 +35,7 @@
     <string name="download">Download</string>
     <string name="language">Language</string>
     <string name="info_not_available">Information Not Available</string>
+    <string name="no_downloads_available">No Downloads Available</string>
+    <string name="share_book">Share Book</string>
+    <string name="delete_book">Delete Book</string>
 </resources>

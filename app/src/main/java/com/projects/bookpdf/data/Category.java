@@ -57,7 +57,7 @@ public class Category {
 
     private String totalPage;
     private int totalLoadedPage = 1;
-    private ArrayList<Book> books = new ArrayList<Book>();
+    private ArrayList<Book> books = new ArrayList<>();
     private HashMap<Integer, Category> subCategory = new HashMap<Integer, Category>();
     private HashMap<Integer, String> subCategoryName = new HashMap<Integer, String>();
 }

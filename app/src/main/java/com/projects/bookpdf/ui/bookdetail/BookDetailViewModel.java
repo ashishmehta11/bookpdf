@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.projects.bookpdf.activity.MainActivity;
 import com.projects.bookpdf.data.ObjectCollection;
+import com.projects.bookpdf.database.DBHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,11 +35,11 @@ class BookDetailViewModel extends ViewModel implements Observer {
     }
 
     //TODO: Download the book!!
-    void downloadBook(String downloadUrl, String bookName) {
+    void downloadBook(String downloadUrl, String bookName,String bookImgUrl) {
         Log.e("Download url f method", downloadUrl);
         if (downloadUrl.length() > 0) {
             Log.e("AJM", "calling download task");
-            new DownloadTask().execute(downloadUrl, bookName);
+            new DownloadTask(bookImgUrl).execute(downloadUrl, bookName);
         }
     }
 
@@ -55,6 +56,12 @@ class BookDetailViewModel extends ViewModel implements Observer {
 
     class DownloadTask extends AsyncTask<String, Void, Void> {
         int downloadSuccess=0;
+        String bookImgUrl;
+
+        DownloadTask(String bookImgUrl) {
+            this.bookImgUrl = bookImgUrl;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -64,22 +71,24 @@ class BookDetailViewModel extends ViewModel implements Observer {
         @Override
         protected Void doInBackground(String... strings) {
             try {
-                Log.e("DownloadTaskBackground", "file and path : Inside do in bg");
-                String path = Environment.getExternalStorageDirectory().toString()+ "/BookPDF";
+                String path;
+                if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)&&
+                !Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY))
+                    path=Environment.getExternalStorageDirectory().toString()+"/BookPDF";
+                else
+                    path = context.getFilesDir().getPath()+ "/BookPDF";
                 File file = new File(path);
                 if (!file.exists()) {
                     file.mkdirs();
                 }
-                Log.e("DownloadTaskBackground", "file created!");
+                Log.e("inBG","file :"+file.getPath());
                 HttpURLConnection connection;
                 URL url = new URL(strings[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setInstanceFollowRedirects(true);
                 HttpURLConnection.setFollowRedirects(true);
                 connection.setRequestMethod("GET");
-                Log.e("DownloadTaskBackground", "connecting to url : "+strings[0]);
                 connection.connect();
-                Log.e("DownloadTaskBackground", "bellow connection.connect : responseCode() : "+connection.getResponseCode());
                 boolean redirect=false;
                 if(connection.getResponseCode()!=HttpURLConnection.HTTP_OK&&(connection.getResponseCode()==HttpURLConnection.HTTP_MOVED_PERM
                         ||connection.getResponseCode()==HttpURLConnection.HTTP_MOVED_TEMP
@@ -132,21 +141,19 @@ class BookDetailViewModel extends ViewModel implements Observer {
             }
         }
         private void saveFile(File file,String bookName,HttpURLConnection connection) throws IOException {
+            //bookName=bookName.replace(" ","_");
             InputStream input;
             File savingFile = new File(file, bookName + ".pdf");
             int fileNo = 1;
-            Log.e("DownloadTaskBackground","does file exist : "+savingFile.exists());
             while (savingFile.exists()) {
                 savingFile = new File(file, bookName + "(" + fileNo + ").pdf");
                 fileNo++;
             }
             if(!savingFile.exists())
                 savingFile.createNewFile();
-            Log.e("DownloadTaskBackground","does file exist : "+savingFile.exists());
-            Log.e("DownloadTaskBackground", "file and path : " + savingFile.getName() + "\n" + savingFile.getAbsolutePath());
             FileOutputStream fos = new FileOutputStream(savingFile);
             input = connection.getInputStream();
-            byte[] buffer = new byte[1024*1024];
+            byte[] buffer = new byte[1024];
             int len1;
             while ((len1 = input.read(buffer)) != -1) {
                 fos.write(buffer, 0, len1);
@@ -154,6 +161,9 @@ class BookDetailViewModel extends ViewModel implements Observer {
             fos.close();
             input.close();
             downloadSuccess=1;
+            DBHelper dbHelper=new DBHelper(context);
+            dbHelper.openDBForWrite();
+            dbHelper.insertIntoTblDownloadedBooks(savingFile.getName(),bookImgUrl);
         }
         @Override
         protected void onPostExecute(Void aVoid) {
