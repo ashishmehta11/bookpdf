@@ -2,7 +2,6 @@ package com.projects.bookpdf.ui.bookdetail;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -72,11 +71,7 @@ class BookDetailViewModel extends ViewModel implements Observer {
         protected Void doInBackground(String... strings) {
             try {
                 String path;
-                if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)&&
-                !Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY))
-                    path=Environment.getExternalStorageDirectory().toString()+"/BookPDF";
-                else
-                    path = context.getFilesDir().getPath()+ "/BookPDF";
+                path = context.getFilesDir().getPath()+ "/BookPDF";
                 File file = new File(path);
                 if (!file.exists()) {
                     file.mkdirs();
@@ -141,7 +136,7 @@ class BookDetailViewModel extends ViewModel implements Observer {
             }
         }
         private void saveFile(File file,String bookName,HttpURLConnection connection) throws IOException {
-            //bookName=bookName.replace(" ","_");
+            bookName=bookName.replace(" ","_");
             InputStream input;
             File savingFile = new File(file, bookName + ".pdf");
             int fileNo = 1;
@@ -151,6 +146,9 @@ class BookDetailViewModel extends ViewModel implements Observer {
             }
             if(!savingFile.exists())
                 savingFile.createNewFile();
+            savingFile.setReadable(true);
+            savingFile.setWritable(true);
+            savingFile.setExecutable(true);
             FileOutputStream fos = new FileOutputStream(savingFile);
             input = connection.getInputStream();
             byte[] buffer = new byte[1024];

@@ -1,7 +1,6 @@
 package com.projects.bookpdf.ui.downloads;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
@@ -26,11 +25,7 @@ class DownloadsViewModel extends ViewModel {
 
     DownloadsViewModel(Context context) {
         this.context = context;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) &&
-                !Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY))
-            path = Environment.getExternalStorageDirectory().toString() + "/BookPDF";
-        else
-            path = context.getFilesDir().getPath() + "/BookPDF";
+        path = context.getFilesDir().getPath() + "/BookPDF";
         dbHelper = new DBHelper(context);
         Log.e("Download VM", "constructor() : path : " + path);
     }

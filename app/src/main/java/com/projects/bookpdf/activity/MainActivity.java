@@ -3,7 +3,6 @@ package com.projects.bookpdf.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -73,9 +72,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: setting permission to share image
-        StrictMode.VmPolicy.Builder builder1 = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder1.build());
 
         setContentView(R.layout.activity_main);
         ObjectCollection.searchResultNotifier.addObserver(MainActivity.this);

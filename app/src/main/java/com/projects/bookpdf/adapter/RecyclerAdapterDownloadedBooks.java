@@ -3,6 +3,7 @@ package com.projects.bookpdf.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.projects.bookpdf.BuildConfig;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.activity.MainActivity;
 
@@ -169,9 +172,14 @@ public class RecyclerAdapterDownloadedBooks extends RecyclerView.Adapter<Recycle
             switch (item.getItemId()) {
                 case R.id.share_book:
                     Intent i = new Intent(Intent.ACTION_SEND);
-                    i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                    i.setType("*/*");
-                    i.putExtra(Intent.EXTRA_TEXT,"Created by BookPDF");
+                    Uri uri;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        uri = FileProvider.getUriForFile(context.getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+                    else
+                        uri=Uri.fromFile(file);
+                    i.putExtra(Intent.EXTRA_STREAM, uri);
+                    i.setType("application/pdf");
+                    i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     Intent chooser = Intent.createChooser(i, "Share Book Using");
                     chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(chooser);
@@ -190,12 +198,26 @@ public class RecyclerAdapterDownloadedBooks extends RecyclerView.Adapter<Recycle
 
     private void launchIntent(File file) {
         Intent intent;
-        intent = new Intent(Intent.ACTION_VIEW);
-        Log.e("launching","file.path : "+file.getAbsoluteFile().getAbsolutePath());
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent = Intent.createChooser(intent, "Open File");
-        context.startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent = new Intent(Intent.ACTION_VIEW);
+            Uri uri = FileProvider.getUriForFile(context.getApplicationContext(), BuildConfig.APPLICATION_ID+".provider", file);
+            intent.setDataAndType(uri, "application/pdf");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = Intent.createChooser(intent, "Open File");
+            context.startActivity(intent);
+        }
+        else
+        {
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = Intent.createChooser(intent, "Open File");
+            context.startActivity(intent);
+        }
         MainActivity.stopProgressDialog();
     }
 
