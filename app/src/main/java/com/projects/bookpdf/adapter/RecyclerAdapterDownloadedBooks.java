@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,7 +64,7 @@ public class RecyclerAdapterDownloadedBooks extends RecyclerView.Adapter<Recycle
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             if (!show404) {
-                if (position == downloadedBooksList.size() - 1) {
+                /*if (position == downloadedBooksList.size() - 1) {
                     ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) holder.leftCard.getLayoutParams();
                     lp.bottomMargin = 200;
                     holder.leftCard.setLayoutParams(lp);
@@ -73,7 +72,7 @@ public class RecyclerAdapterDownloadedBooks extends RecyclerView.Adapter<Recycle
                     ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) holder.leftCard.getLayoutParams();
                     lp.bottomMargin = 8;
                     holder.leftCard.setLayoutParams(lp);
-                }
+                }*/
                 ArrayList<File> file = downloadedBooksList.get(position);
                 ArrayList<String> images = downloadedBooksImageList.get(position);
                 Log.e("AdapterDownloadBooks", "file.size() :" + file.size());

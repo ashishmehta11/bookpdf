@@ -1,7 +1,7 @@
 package com.projects.bookpdf.data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Category {
     private int categoryId;
@@ -11,11 +11,11 @@ public class Category {
         return books;
     }
 
-    public HashMap<Integer, Category> getSubCategory() {
+    public LinkedHashMap<String, Category> getSubCategory() {
         return subCategory;
     }
 
-    public HashMap<Integer, String> getSubCategoryName() {
+    public LinkedHashMap<String, String> getSubCategoryName() {
         return subCategoryName;
     }
 
@@ -35,7 +35,7 @@ public class Category {
         return categoryImageUrl;
     }
 
-    public String getTotalPage() {
+    public int getTotalPage() {
         return totalPage;
     }
 
@@ -46,7 +46,7 @@ public class Category {
     private String categoryUrl;
     private String categoryImageUrl;
 
-    public Category(int categoryId, String categoryTitle, String categoryUrl, String categoryImageUrl, String totalPage, int totalLoadedPage) {
+    public Category(int categoryId, String categoryTitle, String categoryUrl, String categoryImageUrl, int totalPage, int totalLoadedPage) {
         this.categoryId = categoryId;
         this.categoryTitle = categoryTitle;
         this.categoryUrl = categoryUrl;
@@ -55,9 +55,12 @@ public class Category {
         this.totalLoadedPage = totalLoadedPage;
     }
 
-    private String totalPage;
+    private int totalPage;
     private int totalLoadedPage = 1;
+    //TODO: books Array List will contain all the books appearing under this particular category/sub category
     private ArrayList<Book> books = new ArrayList<>();
-    private HashMap<Integer, Category> subCategory = new HashMap<Integer, Category>();
-    private HashMap<Integer, String> subCategoryName = new HashMap<Integer, String>();
+    //TODO: subCategory hashMap will contain sub category name and sub category data as a Category object
+    private LinkedHashMap<String, Category> subCategory = new LinkedHashMap<>();
+    //TODO: subCategoryName hashMap will contain sub category name and sub category image url
+    private LinkedHashMap<String,String> subCategoryName =null;
 }

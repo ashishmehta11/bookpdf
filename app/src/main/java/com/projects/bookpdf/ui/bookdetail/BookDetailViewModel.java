@@ -38,7 +38,7 @@ class BookDetailViewModel extends ViewModel implements Observer {
         Log.e("Download url f method", downloadUrl);
         if (downloadUrl.length() > 0) {
             Log.e("AJM", "calling download task");
-            new DownloadTask(bookImgUrl).execute(downloadUrl, bookName);
+            new DownloadTask(bookImgUrl,bookName).execute(downloadUrl, bookName);
         }
     }
 
@@ -55,10 +55,11 @@ class BookDetailViewModel extends ViewModel implements Observer {
 
     class DownloadTask extends AsyncTask<String, Void, Void> {
         int downloadSuccess=0;
-        String bookImgUrl;
+        String bookImgUrl,bookName;
 
-        DownloadTask(String bookImgUrl) {
+        public DownloadTask(String bookImgUrl, String bookName) {
             this.bookImgUrl = bookImgUrl;
+            this.bookName = bookName;
         }
 
         @Override
@@ -169,11 +170,11 @@ class BookDetailViewModel extends ViewModel implements Observer {
             MainActivity.stopProgressDialog();
             if(downloadSuccess==1)
             {
-                MainActivity.showSuccessDialog("Book Downloaded");
+                MainActivity.showSuccessDialog(bookName+"\nDownloaded");
             }
             else if(downloadSuccess==0)
             {
-                MainActivity.showFailureDialog("Sorry, could not Download the Book");
+                MainActivity.showFailureDialog("Sorry, could not Download\n"+bookName);
             }
         }
     }

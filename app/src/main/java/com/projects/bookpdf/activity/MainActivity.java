@@ -22,6 +22,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
 import com.projects.bookpdf.data.ObjectCollection;
+import com.projects.bookpdf.ui.category.CategoryFragment;
 import com.projects.bookpdf.ui.home.HomeFragment;
 import com.projects.bookpdf.ui.search.SearchFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -251,5 +252,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         super.onDestroy();
         HomeFragment.homeViewModel = null;
         HomeFragment.view = null;
+        CategoryFragment.view=null;
+        CategoryFragment.categoryViewModel=null;
     }
 }

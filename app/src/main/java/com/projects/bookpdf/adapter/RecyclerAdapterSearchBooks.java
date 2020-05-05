@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,10 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
-import com.projects.bookpdf.data.Book;
 import com.projects.bookpdf.data.ObjectCollection;
-
-import java.util.ArrayList;
 
 public class RecyclerAdapterSearchBooks extends RecyclerView.Adapter<RecyclerAdapterSearchBooks.ViewHolder> {
     public static boolean newIncomingDataReached;
@@ -53,7 +49,7 @@ public class RecyclerAdapterSearchBooks extends RecyclerView.Adapter<RecyclerAda
         if(position==ObjectCollection.searchBook.getBooks().size()-1)
         {
             RecyclerView.LayoutParams params= (RecyclerView.LayoutParams) holder.itemCard.getLayoutParams();
-            params.bottomMargin=200;
+            params.bottomMargin=184;
             holder.itemCard.setLayoutParams(params);
         }
         else

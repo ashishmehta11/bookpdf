@@ -59,7 +59,7 @@ public class HomePageBooksAdapter extends SectionAdapter<HomePageBooksAdapter.It
         if(isThisLast)
         {
             ConstraintLayout.LayoutParams params= (ConstraintLayout.LayoutParams) holder.bookList.getLayoutParams();
-            params.bottomMargin=200;
+            params.bottomMargin=184;
             holder.bookList.setLayoutParams(params);
         }
         HomePageInnerRecyclerBooksAdapter booksAdapter=new HomePageInnerRecyclerBooksAdapter(headerText,bookList,context);
