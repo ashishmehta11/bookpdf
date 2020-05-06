@@ -1,6 +1,7 @@
 package com.projects.bookpdf.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RecyclerAdapterCategory extends RecyclerView.Adapter<RecyclerAdapterCategory.ViewHolder> {
     private Context context;
     private int lastPos=-1;
+    private boolean selectedOnce=false;
+    private static final String tag="AdapterCategory";
     private CategorySelectedNotifier categorySelectedNotifier=new CategorySelectedNotifier();
     public RecyclerAdapterCategory(Context context) {
         this.context = context;
@@ -51,6 +54,8 @@ public class RecyclerAdapterCategory extends RecyclerView.Adapter<RecyclerAdapte
             }
             i++;
         }
+        Log.e(tag,"inside onBindViewHolder() : "+position);
+        Log.e(tag,"inside onBindVIewHolder() catName : "+catName);
         holder.txtCategoryName.setText(catName);
         Glide.with(context)
                 .load(imgUrl)
@@ -63,8 +68,10 @@ public class RecyclerAdapterCategory extends RecyclerView.Adapter<RecyclerAdapte
             categorySelectedNotifier.notifyAboutCategorySelected(finalCatName);
             lastPos=position;
         });
-        if(position==0)
+        if(position==0&&!selectedOnce) {
+            selectedOnce=true;
             holder.cardCategory.callOnClick();
+        }
         if(lastPos==position)
             select(holder);
         else

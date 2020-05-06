@@ -11,7 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -360,7 +359,7 @@ public class ObjectCollection {
         //TODO: code below
         new Thread(() -> {
             LinkedHashMap<String,Category> subCategory=new LinkedHashMap<String, Category>();
-            LinkedHashMap<String,String> subCategoryName=new LinkedHashMap<String, String>();
+            category.get(selectedCategory).setSubCategoryName(new LinkedHashMap<>());
             Document doc = null;
             try {
                 doc = Jsoup.connect(category.get(selectedCategory).getCategoryUrl()).get();
@@ -375,55 +374,54 @@ public class ObjectCollection {
                 String urlcat = cat.select("a").attr("abs:href").toString().split(",")[0];
                 Category c = new Category(title, urlcat, imagecat);
                 subCategory.put(title,c);
-                subCategoryName.put(title,imagecat);
+                category.get(selectedCategory).getSubCategoryName().put(title,imagecat);
             }
-
-            category.get(selectedCategory).setSubCategoryName(subCategoryName);
+            Log.e("AJM","subCAtName.size() : "+category.get(selectedCategory).getSubCategoryName().size());
             category.get(selectedCategory).setSubCategory(subCategory);
+            activity.runOnUiThread(() -> subCategoryNamesNotifier.notifyCategoryViewModel(selectedCategory));
         }).start();
-        activity.runOnUiThread(() -> subCategoryNamesNotifier.notifyCategoryViewModel(selectedCategory));
+
     }
 
     public static void getBooksForCategory(String selectedCategory, FragmentActivity activity) {
         //TODO: code below
         new Thread(() -> {
-        try {
-            Document doc=Jsoup.connect(category.get(selectedCategory).getCategoryUrl()).get();
+            try {
+                Document doc = Jsoup.connect(category.get(selectedCategory).getCategoryUrl()).get();
 
-        ArrayList<Book> temp=new ArrayList<Book>();
-        Elements books = doc.select("[class=files-new]");
-        int totalPage = Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
-        for (int subIndex = 0; subIndex < books.select("li").size(); subIndex++) {
-            Book b;
-            if (!books.select("li").get(subIndex).hasClass("liad")) {
-                int bookId = Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
-                String bookImageUrl = books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
-                String bookUrl = books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
-                String bookName = books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
-                String bookYear = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
-                String bookSize = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
-                String bookTotalDownload = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
-                String bookPage = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
-                String bookDescription = "";
-                String authors = "";
-                String bookLanguage = "";
-                String downloadUrl = "";
-                boolean areDetailsFetched = false;
-                b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
-                temp.add(b);
+                ArrayList<Book> temp = new ArrayList<Book>();
+                Elements books = doc.select("[class=files-new]");
+                int totalPage = Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
+                for (int subIndex = 0; subIndex < books.select("li").size(); subIndex++) {
+                    Book b;
+                    if (!books.select("li").get(subIndex).hasClass("liad")) {
+                        int bookId = Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                        String bookImageUrl = books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                        String bookUrl = books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                        String bookName = books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                        String bookYear = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                        String bookSize = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                        String bookTotalDownload = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                        String bookPage = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                        String bookDescription = "";
+                        String authors = "";
+                        String bookLanguage = "";
+                        String downloadUrl = "";
+                        boolean areDetailsFetched = false;
+                        b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
+                        temp.add(b);
+                    }
+                }
+                category.get(selectedCategory).setBooks(temp);
+                category.get(selectedCategory).setTotalPage(totalPage);
+                activity.runOnUiThread(() -> booksForCategoryNotifier.notifyCategoryViewModel(selectedCategory));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }
-            category.get(selectedCategory).setBooks(temp);
-        category.get(selectedCategory).setTotalPage(totalPage);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
 
-    }).start();
-        activity.runOnUiThread(() -> booksForCategoryNotifier.notifyCategoryViewModel(selectedCategory));
     }
-
     public static void getBooksForSubCategory(String selectedCategory, String selectedSubCategory, FragmentActivity activity) {
         //TODO: code below
         new Thread(() -> {
@@ -454,29 +452,50 @@ public class ObjectCollection {
                     }
                 }
                 category.get(selectedCategory).getSubCategory().get(selectedSubCategory).setBooks(temp);
-                category.get(selectedCategory).getSubCategory().get(selectedCategory).setTotalPage(totalPage);
-
+                category.get(selectedCategory).getSubCategory().get(selectedSubCategory).setTotalPage(totalPage);
+                activity.runOnUiThread(() -> booksForSubCategoryNotifier.notifyCategoryViewModel(selectedCategory, selectedSubCategory));
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }).start();
-        activity.runOnUiThread(() -> booksForSubCategoryNotifier.notifyCategoryViewModel(selectedCategory, selectedSubCategory));
+
     }
 
     public static void getSubCategoryData(String selectedCategory, String selectedSubCategory, FragmentActivity activity) {
         //TODO: Code below
+        new Thread(() -> {
+            LinkedHashMap<String,Category> subCategory=new LinkedHashMap<String, Category>();
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(category.get(selectedCategory).getCategoryUrl()).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Elements allCats = doc.select("[class=categories-list subcategories-list mt-4]").select("li");
+            String title;
+            for (Element cat : allCats) {
+                title = cat.select("a").select("img").attr("title").toString();
+                String imagecat = cat.select("a").select("img").attr("abs:src").toString();
+                String urlcat = cat.select("a").attr("abs:href").toString().split(",")[0];
+                Category c = new Category(title, urlcat, imagecat);
+                subCategory.put(title,c);
+            }
+            category.get(selectedCategory).setSubCategory(subCategory);
+            activity.runOnUiThread(() -> subCategoryDataNotifier.notifyCategoryViewModel(selectedCategory, selectedSubCategory));
+        }).start();
 
-        activity.runOnUiThread(() -> subCategoryDataNotifier.notifyCategoryViewModel(selectedCategory, selectedSubCategory));
     }
 
-    public static void loadMorePagesForCategory(String currentCategory, FragmentActivity activity) {
+    public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategory, FragmentActivity activity) {
 
+        Objects.requireNonNull(category.get(currentCategory)).setTotalLoadedPage(pgNoToLoad+1);
         activity.runOnUiThread(() ->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,null));
     }
 
-    public static void loadMorePagesForCategory(String currentCategory, String currentSubCategory, FragmentActivity activity) {
+    public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategory, String currentSubCategory, FragmentActivity activity) {
 
+        category.get(currentCategory).getSubCategory().get(currentSubCategory).setTotalLoadedPage(pgNoToLoad+1);
         activity.runOnUiThread(() ->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,currentSubCategory));
     }
 

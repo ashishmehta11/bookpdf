@@ -1,6 +1,7 @@
 package com.projects.bookpdf.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
     private FragmentActivity activity;
 
     public RecyclerAdapterBooks(Context context, HashMap<Integer, ArrayList<Book>> bookList, String currentCategory, String currentSubCategory, FragmentActivity activity) {
+        Log.e("BookAdapter", "inside constructor");
         this.context = context;
         this.bookList = bookList;
         this.currentCategory = currentCategory;
@@ -40,39 +42,40 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
         morePagesLoaded = true;
     }
 
-    public void setMorePages()
-    {
+    public void setMorePages() {
         ArrayList<Book> tmpCollection;
-        ArrayList<Book> tmpList=new ArrayList<>();
-        if(currentSubCategory==null)
+        ArrayList<Book> tmpList = new ArrayList<>();
+        if (currentSubCategory == null)
             tmpCollection = Objects.requireNonNull(ObjectCollection.category.get(currentCategory)).getBooks();
         else
             tmpCollection = Objects.requireNonNull(ObjectCollection.category.get(currentCategory)).getSubCategory().get(currentSubCategory).getBooks();
-        int noOfBooks=0;
-        for(Map.Entry<Integer,ArrayList<Book>> entry :bookList.entrySet())
-        {
-            noOfBooks+=entry.getValue().size();
+        int noOfBooks = 0;
+        for (Map.Entry<Integer, ArrayList<Book>> entry : bookList.entrySet()) {
+            noOfBooks += entry.getValue().size();
         }
-        if(bookList.get(bookList.size()-1).size()==1)
-        {
-            if(tmpCollection.size()>noOfBooks) {
-                bookList.get(bookList.size()-1).add(tmpCollection.get(noOfBooks));
+        int oldSize = noOfBooks;
+        if (bookList.get(bookList.size() - 1).size() == 1) {
+            if (tmpCollection.size() > noOfBooks) {
+                bookList.get(bookList.size() - 1).add(tmpCollection.get(noOfBooks));
                 noOfBooks++;
             }
         }
-        int k=bookList.size();
-        for(;noOfBooks<tmpCollection.size();noOfBooks++)
-        {
+        int k = bookList.size();
+        for (; noOfBooks < tmpCollection.size(); noOfBooks++) {
             tmpList.add(tmpCollection.get(noOfBooks));
-            if(tmpList.size()==2||noOfBooks==tmpCollection.size()-1)
-            {
-                bookList.put(k,tmpList);
+            if (tmpList.size() == 2 || noOfBooks == tmpCollection.size() - 1) {
+                bookList.put(k, tmpList);
                 k++;
-                tmpList=new ArrayList<>();
+                tmpList = new ArrayList<>();
             }
         }
-        notifyDataSetChanged();
-        morePagesLoaded=true;
+        noOfBooks = 0;
+        for (Map.Entry<Integer, ArrayList<Book>> entry : bookList.entrySet()) {
+            noOfBooks += entry.getValue().size();
+        }
+        if (noOfBooks > oldSize)
+            notifyDataSetChanged();
+        morePagesLoaded = true;
     }
 
     @NonNull
@@ -84,20 +87,21 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Log.e("BookAdapter", "inside onBindViewHolder() : postions : " + position);
         if (position >= bookList.size() - 3 && morePagesLoaded) {
             if (currentSubCategory == null) {
                 if (ObjectCollection.category.get(currentCategory).getTotalLoadedPage() + 1
                         <=
                         ObjectCollection.category.get(currentCategory).getTotalPage()) {
                     morePagesLoaded = false;
-                    ObjectCollection.loadMorePagesForCategory(currentCategory, activity);
+                    ObjectCollection.loadMorePagesForCategory(ObjectCollection.category.get(currentCategory).getTotalLoadedPage() + 1, currentCategory, activity);
                 }
             } else {
                 if (ObjectCollection.category.get(currentCategory).getSubCategory().get(currentSubCategory).getTotalLoadedPage() + 1
                         <=
                         ObjectCollection.category.get(currentCategory).getSubCategory().get(currentSubCategory).getTotalPage()) {
                     morePagesLoaded = false;
-                    ObjectCollection.loadMorePagesForCategory(currentCategory, currentSubCategory, activity);
+                    ObjectCollection.loadMorePagesForCategory(ObjectCollection.category.get(currentCategory).getSubCategory().get(currentSubCategory).getTotalLoadedPage() + 1, currentCategory, currentSubCategory, activity);
                 }
             }
         }
@@ -118,7 +122,7 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
                 holder.txtYearLeft.setText("NA");
             else
                 holder.txtYearLeft.setText(bookList.get(position).get(0).getBookYear());
-            holder.cardLeft.setOnClickListener(v ->{
+            holder.cardLeft.setOnClickListener(v -> {
 
             });
         } else if (bookList.get(position).size() == 2) {
@@ -142,7 +146,7 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
                 holder.txtYearRight.setText("NA");
             else
                 holder.txtYearRight.setText(bookList.get(position).get(1).getBookYear());
-            holder.cardRight.setOnClickListener( v ->{
+            holder.cardRight.setOnClickListener(v -> {
 
             });
         }

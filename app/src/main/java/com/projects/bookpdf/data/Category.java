@@ -15,7 +15,7 @@ public class Category {
     //TODO: subCategory hashMap will contain sub category name and sub category data as a Category object
     private LinkedHashMap<String, Category> subCategory = new LinkedHashMap<String, Category>();
     //TODO: subCategoryName hashMap will contain sub category name and sub category image url
-    private LinkedHashMap<String,String> subCategoryName =new LinkedHashMap<String,String>();
+    private LinkedHashMap<String,String> subCategoryName =null;
 
     public void setTotalPage(int totalPage) {
         this.totalPage = totalPage;
@@ -69,7 +69,9 @@ public class Category {
         return totalLoadedPage;
     }
 
-
+    public void setTotalLoadedPage(int totalLoadedPage) {
+        this.totalLoadedPage = totalLoadedPage;
+    }
 
     public Category(String categoryTitle, String categoryUrl, String categoryImageUrl) {
         this.categoryTitle = categoryTitle;

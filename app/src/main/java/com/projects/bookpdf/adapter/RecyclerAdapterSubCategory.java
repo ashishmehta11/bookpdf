@@ -1,6 +1,7 @@
 package com.projects.bookpdf.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class RecyclerAdapterSubCategory extends RecyclerView.Adapter<RecyclerAda
     private Context context;
     private LinkedHashMap<String,String> subCategoryNames;
     private SubCategorySelectedNotifier subCategorySelectedNotifier=new SubCategorySelectedNotifier();
-
+    private static final String tag="SubCategoryAdapter";
     private int lastPos=-1;
     public RecyclerAdapterSubCategory(Context context, LinkedHashMap<String, String> subCategoryNames) {
         this.context = context;
@@ -54,7 +55,8 @@ public class RecyclerAdapterSubCategory extends RecyclerView.Adapter<RecyclerAda
             }
             i++;
         }
-
+        Log.e(tag,"inside onBindViewHolder() : position "+position);
+        Log.e(tag,"inside onBindViewHolder() : subCatName "+subCatName);
         holder.txtSubCategoryName.setText(subCatName);
         Glide.with(context)
                 .load(imgUrl)
