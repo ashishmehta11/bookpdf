@@ -46,7 +46,15 @@ class BookDetailViewModel extends ViewModel implements Observer {
     public void update(Observable o, Object arg) {
         MainActivity.stopProgressDialog();
         if (o instanceof ObjectCollection.BookDetailNotifier)
-            loadRemainingData.setValue(loadRemainingData.getValue() + 1);
+        {
+            if(arg != null)
+            {
+                if((int)arg==0) {
+                    loadRemainingData.setValue(loadRemainingData.getValue() + 1);
+                }
+            }
+
+            }
     }
 
     MutableLiveData<Integer> getLoadRemainingData() {

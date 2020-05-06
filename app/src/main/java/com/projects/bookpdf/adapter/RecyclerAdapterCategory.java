@@ -41,11 +41,11 @@ public class RecyclerAdapterCategory extends RecyclerView.Adapter<RecyclerAdapte
         int i=0;
         String catName = null;
         String imgUrl=null;
-        for(Map.Entry<String, Category> entry : ObjectCollection.category.entrySet())
+        for(Map.Entry<String,Category> entry : ObjectCollection.category.entrySet())
         {
             if(i==position)
             {
-                catName=entry.getKey();
+                catName=entry.getValue().getCategoryTitle();
                 imgUrl=entry.getValue().getCategoryImageUrl();
                 break;
             }
@@ -93,7 +93,7 @@ public class RecyclerAdapterCategory extends RecyclerView.Adapter<RecyclerAdapte
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             cardCategory=itemView.findViewById(R.id.card_view_category);
-            txtCategoryName=itemView.findViewById(R.id.txt_category);
+            txtCategoryName=itemView.findViewById(R.id.txt_category_name);
             imgCategory=itemView.findViewById(R.id.circle_img_category);
         }
     }
