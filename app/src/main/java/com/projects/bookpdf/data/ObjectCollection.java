@@ -377,6 +377,7 @@ public class ObjectCollection {
                 subCategory.put(title,c);
                 subCategoryName.put(title,imagecat);
             }
+
             category.get(selectedCategory).setSubCategoryName(subCategoryName);
             category.get(selectedCategory).setSubCategory(subCategory);
         }).start();
@@ -413,6 +414,7 @@ public class ObjectCollection {
             }
         }
             category.get(selectedCategory).setBooks(temp);
+        category.get(selectedCategory).setTotalPage(totalPage);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -452,6 +454,7 @@ public class ObjectCollection {
                     }
                 }
                 category.get(selectedCategory).getSubCategory().get(selectedSubCategory).setBooks(temp);
+                category.get(selectedCategory).getSubCategory().get(selectedCategory).setTotalPage(totalPage);
 
             } catch (IOException e) {
                 e.printStackTrace();

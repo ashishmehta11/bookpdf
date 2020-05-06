@@ -17,6 +17,10 @@ public class Category {
     //TODO: subCategoryName hashMap will contain sub category name and sub category image url
     private LinkedHashMap<String,String> subCategoryName =new LinkedHashMap<String,String>();
 
+    public void setTotalPage(int totalPage) {
+        this.totalPage = totalPage;
+    }
+
     public void setBooks(ArrayList<Book> books) {
         this.books = books;
     }
