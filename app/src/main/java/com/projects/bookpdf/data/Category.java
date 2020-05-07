@@ -22,7 +22,7 @@ public class Category {
     }
 
     public void setBooks(ArrayList<Book> books) {
-        this.books = books;
+        this.books.addAll(books);
     }
 
     public void setSubCategory(LinkedHashMap<String, Category> subCategory) {

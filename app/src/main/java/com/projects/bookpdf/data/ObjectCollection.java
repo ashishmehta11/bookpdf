@@ -487,16 +487,82 @@ public class ObjectCollection {
 
     }
 
-    public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategory, FragmentActivity activity) {
+public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategory, FragmentActivity activity) {
+        new Thread(() -> {
+            try {
+                Document doc;
+                doc = Jsoup.connect(category.get(currentCategory).getCategoryUrl()+"p"+pgNoToLoad).get();
+                Log.e("Current load more url",category.get(currentCategory).getCategoryUrl()+"/p"+pgNoToLoad);
+                ArrayList<Book> temp = new ArrayList<Book>();
+                Elements books = doc.select("[class=files-new]");
+                int totalPage = Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
+                for (int subIndex = 0; subIndex < books.select("li").size(); subIndex++) {
+                    Book b;
+                    if (!books.select("li").get(subIndex).hasClass("liad")) {
+                        int bookId = Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                        String bookImageUrl = books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                        String bookUrl = books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                        String bookName = books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                        String bookYear = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                        String bookSize = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                        String bookTotalDownload = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                        String bookPage = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                        String bookDescription = "";
+                        String authors = "";
+                        String bookLanguage = "";
+                        String downloadUrl = "";
+                        boolean areDetailsFetched = false;
+                        b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
+                        temp.add(b);
+                    }
+                }
+                category.get(currentCategory).setBooks(temp);
+                Objects.requireNonNull(category.get(currentCategory)).setTotalLoadedPage(pgNoToLoad+1);
+                activity.runOnUiThread(() ->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,null));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
 
-        Objects.requireNonNull(category.get(currentCategory)).setTotalLoadedPage(pgNoToLoad+1);
-        activity.runOnUiThread(() ->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,null));
     }
 
     public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategory, String currentSubCategory, FragmentActivity activity) {
+        new Thread(() -> {
+            try {
+                Document doc;
+                doc = Jsoup.connect(category.get(currentCategory).getSubCategory().get(currentSubCategory).getCategoryUrl()+"p"+pgNoToLoad).get();
+                Log.e("Current sub load more",category.get(currentCategory).getSubCategory().get(currentSubCategory).getCategoryUrl()+"/p"+pgNoToLoad);
+                ArrayList<Book> temp = new ArrayList<Book>();
+                Elements books = doc.select("[class=files-new]");
+                int totalPage = Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
+                for (int subIndex = 0; subIndex < books.select("li").size(); subIndex++) {
+                    Book b;
+                    if (!books.select("li").get(subIndex).hasClass("liad")) {
+                        int bookId = Integer.parseInt(books.select("li").get(subIndex).select("[class=file-left]").select("a").attr("data-id"));
+                        String bookImageUrl = books.select("li").get(subIndex).select("[class=file-left]").select("img").attr("abs:src");
+                        String bookUrl = books.select("li").get(subIndex).select("[class=file-right]").select("a").attr("abs:href");
+                        String bookName = books.select("li").get(subIndex).select("[class=file-right]").select("h2").text();
+                        String bookYear = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-year]").text();
+                        String bookSize = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-size hidemobile]").text();
+                        String bookTotalDownload = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-hit]").text();
+                        String bookPage = books.select("li").get(subIndex).select("[class=file-right]").select("[class=fi-pagecount]").text();
+                        String bookDescription = "";
+                        String authors = "";
+                        String bookLanguage = "";
+                        String downloadUrl = "";
+                        boolean areDetailsFetched = false;
+                        b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
+                        temp.add(b);
+                    }
+                }
+                category.get(currentCategory).getSubCategory().get(currentSubCategory).setBooks(temp);
+                category.get(currentCategory).getSubCategory().get(currentSubCategory).setTotalLoadedPage(pgNoToLoad+1);
+                activity.runOnUiThread(()->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,currentSubCategory));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
 
-        category.get(currentCategory).getSubCategory().get(currentSubCategory).setTotalLoadedPage(pgNoToLoad+1);
-        activity.runOnUiThread(() ->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,currentSubCategory));
     }
 
 
