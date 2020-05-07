@@ -491,8 +491,8 @@ public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategor
         new Thread(() -> {
             try {
                 Document doc;
-                doc = Jsoup.connect(category.get(currentCategory).getCategoryUrl()+"p"+pgNoToLoad).get();
                 Log.e("Current load more url",category.get(currentCategory).getCategoryUrl()+"/p"+pgNoToLoad);
+                doc = Jsoup.connect(category.get(currentCategory).getCategoryUrl()+"p"+pgNoToLoad).get();
                 ArrayList<Book> temp = new ArrayList<Book>();
                 Elements books = doc.select("[class=files-new]");
                 int totalPage = Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
@@ -513,14 +513,14 @@ public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategor
                         String downloadUrl = "";
                         boolean areDetailsFetched = false;
                         b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
-                        temp.add(b);
+                        category.get(currentCategory).getBooks().add(b);
                     }
                 }
-                category.get(currentCategory).setBooks(temp);
                 Objects.requireNonNull(category.get(currentCategory)).setTotalLoadedPage(pgNoToLoad+1);
                 activity.runOnUiThread(() ->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,null));
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Log.e("ObjectCollection","loadMorePagesForCategory(pgNo :"+pgNoToLoad+", category : "+currentCategory+") : eception "+e.getMessage());
+                Log.e("ObjectCollection","loadMorePagesForCategory(pgNo :"+pgNoToLoad+", category : "+currentCategory+") : eception "+ Arrays.toString(e.getStackTrace()));
             }
         }).start();
 
@@ -552,14 +552,14 @@ public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategor
                         String downloadUrl = "";
                         boolean areDetailsFetched = false;
                         b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
-                        temp.add(b);
+                        category.get(currentCategory).getSubCategory().get(currentSubCategory).getBooks().add(b);
                     }
                 }
-                category.get(currentCategory).getSubCategory().get(currentSubCategory).setBooks(temp);
                 category.get(currentCategory).getSubCategory().get(currentSubCategory).setTotalLoadedPage(pgNoToLoad+1);
                 activity.runOnUiThread(()->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,currentSubCategory));
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Log.e("ObjectCollection","loadMorePagesForCategory(pgNo :"+pgNoToLoad+", category : "+currentCategory+",subCategory :"+currentSubCategory+") : eception "+e.getMessage());
+                Log.e("ObjectCollection","loadMorePagesForCategory(pgNo :"+pgNoToLoad+", category : "+currentCategory+",subCategory :"+currentSubCategory+") : eception "+ Arrays.toString(e.getStackTrace()));
             }
         }).start();
 

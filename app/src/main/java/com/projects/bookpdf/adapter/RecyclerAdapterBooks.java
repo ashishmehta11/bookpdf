@@ -54,6 +54,8 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
             noOfBooks += entry.getValue().size();
         }
         int oldSize = noOfBooks;
+        Log.e("BookAdapter","inside setMorePage() : old  : "+bookList.size());
+        Log.e("BookAdapter","inside setMorePage() : old size : "+oldSize);
         if (bookList.get(bookList.size() - 1).size() == 1) {
             if (tmpCollection.size() > noOfBooks) {
                 bookList.get(bookList.size() - 1).add(tmpCollection.get(noOfBooks));
@@ -73,6 +75,8 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
         for (Map.Entry<Integer, ArrayList<Book>> entry : bookList.entrySet()) {
             noOfBooks += entry.getValue().size();
         }
+        Log.e("BookAdapter","inside setMorePage() : new  : "+bookList.size());
+        Log.e("BookAdapter","inside setMorePage() : new size : "+noOfBooks);
         if (noOfBooks > oldSize)
             notifyDataSetChanged();
         morePagesLoaded = true;
@@ -90,6 +94,8 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
         Log.e("BookAdapter", "inside onBindViewHolder() : postions : " + position);
         if (position >= bookList.size() - 3 && morePagesLoaded) {
             if (currentSubCategory == null) {
+                Log.e("BookAdapter","for category : toalLoadedPages : "+ObjectCollection.category.get(currentCategory).getTotalLoadedPage());
+                Log.e("BookAdapter","for category : toalPages : "+ObjectCollection.category.get(currentCategory).getTotalPage());
                 if (ObjectCollection.category.get(currentCategory).getTotalLoadedPage() + 1
                         <=
                         ObjectCollection.category.get(currentCategory).getTotalPage()) {
@@ -97,6 +103,8 @@ public class RecyclerAdapterBooks extends RecyclerView.Adapter<RecyclerAdapterBo
                     ObjectCollection.loadMorePagesForCategory(ObjectCollection.category.get(currentCategory).getTotalLoadedPage() + 1, currentCategory, activity);
                 }
             } else {
+                Log.e("BookAdapter","for category : toalLoadedPages : "+ObjectCollection.category.get(currentCategory).getSubCategory().get(currentSubCategory).getTotalLoadedPage());
+                Log.e("BookAdapter","for category : toalPages : "+ObjectCollection.category.get(currentCategory).getSubCategory().get(currentSubCategory).getTotalPage());
                 if (ObjectCollection.category.get(currentCategory).getSubCategory().get(currentSubCategory).getTotalLoadedPage() + 1
                         <=
                         ObjectCollection.category.get(currentCategory).getSubCategory().get(currentSubCategory).getTotalPage()) {

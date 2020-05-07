@@ -64,6 +64,7 @@ public class CategoryViewModel extends ViewModel implements Observer {
         MainActivity.stopProgressDialog();
         if(o instanceof ObjectCollection.LoadMorePagesForCategoryNotifier)
         {
+            Log.e(tag,"notifier of load more pages");
             String[] x=(String[])arg;
             if(x[1]==null&&selectedSubCategory==null&&x[0].equalsIgnoreCase(selectedCategory))
                 recyclerAdapterBooks.setMorePages();
