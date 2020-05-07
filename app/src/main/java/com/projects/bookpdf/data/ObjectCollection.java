@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.projects.bookpdf.activity.MainActivity;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -216,6 +218,64 @@ public class ObjectCollection {
         }).start();
     }
 
+    //TODO: use this method to load book details from major category object
+    public static void getIndividualBookDetails(int position, String bookUrl,String currentCategory, FragmentActivity activity) {
+        new Thread(() -> {
+            try {
+                String bookLanguage = "";
+                String authors = "";
+                String downloadUrl = "";
+                //TODO: Write code here and fill the variables above by using 'bookUrl' parameter.
+                Log.e("Book Url k:-", bookUrl);
+                //TODO: Write code here and fill the variables above by using 'bookUrl' parameter.
+                Document getDataFromBookUrl = Jsoup.connect(bookUrl).get();
+                String sessionId = getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-preview").toString();
+                String dataId = getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-id").toString();
+                downloadUrl = "https://www.pdfdrive.com/download.pdf?id=" + dataId + "&h=" + sessionId.split("session=")[1] + "&u=cache&ext=pdf";
+                authors = getDataFromBookUrl.select("[itemprop=creator]").text().toString();
+                bookLanguage = getDataFromBookUrl.select("[class=info-green]").last().text().toString();
+
+                //TODO: Don't touch below code!
+                Objects.requireNonNull(category.get(currentCategory).getBooks()).get(position).setBookLanguage(bookLanguage);
+                Objects.requireNonNull(category.get(currentCategory).getBooks()).get(position).setAuthors(authors);
+                Objects.requireNonNull(category.get(currentCategory).getBooks()).get(position).setDownloadUrl(downloadUrl);
+                Objects.requireNonNull(category.get(currentCategory).getBooks()).get(position).setAreDetailsFetched(true);
+                activity.runOnUiThread(() -> bookDetailNotifier.notifyBookDetailViewModel());
+            } catch (Exception e) {
+                Log.e("getBookDetails", "Exception : " + e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));
+            }
+        }).start();
+    }
+
+    //TODO: use this method to load book details from sub category object
+    public static void getIndividualBookDetails(int position, String bookUrl,String currentCategory,String currentSubCategory,FragmentActivity activity) {
+        new Thread(() -> {
+            try {
+                String bookLanguage = "";
+                String authors = "";
+                String downloadUrl = "";
+                //TODO: Write code here and fill the variables above by using 'bookUrl' parameter.
+                Log.e("Book Url k:-", bookUrl);
+                //TODO: Write code here and fill the variables above by using 'bookUrl' parameter.
+                Document getDataFromBookUrl = Jsoup.connect(bookUrl).get();
+                String sessionId = getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-preview").toString();
+                String dataId = getDataFromBookUrl.select("[id=previewButtonMain]").attr("data-id").toString();
+                downloadUrl = "https://www.pdfdrive.com/download.pdf?id=" + dataId + "&h=" + sessionId.split("session=")[1] + "&u=cache&ext=pdf";
+                authors = getDataFromBookUrl.select("[itemprop=creator]").text().toString();
+                bookLanguage = getDataFromBookUrl.select("[class=info-green]").last().text().toString();
+
+                //TODO: Don't touch below code!
+                Objects.requireNonNull(category.get(currentCategory).getSubCategory().get(currentSubCategory).getBooks()).get(position).setBookLanguage(bookLanguage);
+                Objects.requireNonNull(category.get(currentCategory).getSubCategory().get(currentSubCategory).getBooks()).get(position).setAuthors(authors);
+                Objects.requireNonNull(category.get(currentCategory).getSubCategory().get(currentSubCategory).getBooks()).get(position).setDownloadUrl(downloadUrl);
+                Objects.requireNonNull(category.get(currentCategory).getSubCategory().get(currentSubCategory).getBooks()).get(position).setAreDetailsFetched(true);
+                activity.runOnUiThread(() -> bookDetailNotifier.notifyBookDetailViewModel());
+            } catch (Exception e) {
+                Log.e("getBookDetails", "Exception : " + e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));
+            }
+        }).start();
+    }
+
     public static void searchForBook(String query, Activity activity) {
         new Thread(() -> {
             try {
@@ -357,6 +417,7 @@ public class ObjectCollection {
 
     public static void getSubCategoryNamesForCategory(String selectedCategory, FragmentActivity activity) {
         //TODO: code below
+        MainActivity.showProgressDialog();
         new Thread(() -> {
             LinkedHashMap<String,Category> subCategory=new LinkedHashMap<String, Category>();
             category.get(selectedCategory).setSubCategoryName(new LinkedHashMap<>());
@@ -385,6 +446,7 @@ public class ObjectCollection {
 
     public static void getBooksForCategory(String selectedCategory, FragmentActivity activity) {
         //TODO: code below
+        MainActivity.showProgressDialog();
         new Thread(() -> {
             try {
                 Document doc = Jsoup.connect(category.get(selectedCategory).getCategoryUrl()).get();
@@ -424,6 +486,7 @@ public class ObjectCollection {
     }
     public static void getBooksForSubCategory(String selectedCategory, String selectedSubCategory, FragmentActivity activity) {
         //TODO: code below
+        MainActivity.showProgressDialog();
         new Thread(() -> {
             try {
                 Document doc=Jsoup.connect(category.get(selectedCategory).getSubCategory().get(selectedSubCategory).getCategoryUrl()).get();
@@ -464,6 +527,7 @@ public class ObjectCollection {
 
     public static void getSubCategoryData(String selectedCategory, String selectedSubCategory, FragmentActivity activity) {
         //TODO: Code below
+        MainActivity.showProgressDialog();
         new Thread(() -> {
             LinkedHashMap<String,Category> subCategory=new LinkedHashMap<String, Category>();
             Document doc = null;
@@ -496,6 +560,7 @@ public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategor
                 ArrayList<Book> temp = new ArrayList<Book>();
                 Elements books = doc.select("[class=files-new]");
                 int totalPage = Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
+                Log.e("AJM","odl book size :"+Objects.requireNonNull(category.get(currentCategory)).getBooks().size());
                 for (int subIndex = 0; subIndex < books.select("li").size(); subIndex++) {
                     Book b;
                     if (!books.select("li").get(subIndex).hasClass("liad")) {
@@ -513,9 +578,10 @@ public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategor
                         String downloadUrl = "";
                         boolean areDetailsFetched = false;
                         b = new Book(bookId, bookName, bookUrl, bookImageUrl, bookDescription, bookPage, bookYear, bookSize, bookTotalDownload, authors, bookLanguage, downloadUrl, areDetailsFetched);
-                        category.get(currentCategory).getBooks().add(b);
+                        Objects.requireNonNull(category.get(currentCategory)).getBooks().add(b);
                     }
                 }
+                Log.e("AJM","new book size :"+Objects.requireNonNull(category.get(currentCategory)).getBooks().size());
                 Objects.requireNonNull(category.get(currentCategory)).setTotalLoadedPage(pgNoToLoad+1);
                 activity.runOnUiThread(() ->loadMorePagesForCategoryNotifer.notifyCategoryViewModel(currentCategory,null));
             } catch (Exception e) {

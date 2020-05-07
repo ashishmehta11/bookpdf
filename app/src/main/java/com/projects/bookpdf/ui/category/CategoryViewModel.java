@@ -2,6 +2,8 @@ package com.projects.bookpdf.ui.category;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.AbsListView;
+import android.widget.GridView;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
@@ -9,24 +11,25 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.projects.bookpdf.activity.MainActivity;
-import com.projects.bookpdf.adapter.RecyclerAdapterBooks;
+import com.projects.bookpdf.adapter.ListAdapterBooks;
 import com.projects.bookpdf.adapter.RecyclerAdapterCategory;
 import com.projects.bookpdf.adapter.RecyclerAdapterSubCategory;
 import com.projects.bookpdf.data.Book;
 import com.projects.bookpdf.data.ObjectCollection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
 public class CategoryViewModel extends ViewModel implements Observer {
     private Context context;
-    private RecyclerView recyclerBooks,recyclerCategory,recyclerSubCategory;
+    private GridView gridBooks;
+    private RecyclerView recyclerCategory;
+    private RecyclerView recyclerSubCategory;
     private RecyclerAdapterCategory recyclerAdapterCategory;
     private RecyclerAdapterSubCategory recyclerAdapterSubCategory;
-    private RecyclerAdapterBooks recyclerAdapterBooks;
+    private ListAdapterBooks listAdapterBooks;
     private MutableLiveData<Boolean> toggleSubCategoryVisibility;
     private String selectedCategory;
     private String selectedSubCategory=null;
@@ -47,9 +50,9 @@ public class CategoryViewModel extends ViewModel implements Observer {
 
 
 
-    void setViews(RecyclerView books, RecyclerView category, RecyclerView subCategory,FragmentActivity activity) {
+    void setViews(GridView books, RecyclerView category, RecyclerView subCategory, FragmentActivity activity) {
         MainActivity.showProgressDialog();
-        recyclerBooks=books;
+        gridBooks=books;
         recyclerCategory=category;
         recyclerSubCategory=subCategory;
         this.activity=activity;
@@ -67,13 +70,14 @@ public class CategoryViewModel extends ViewModel implements Observer {
             Log.e(tag,"notifier of load more pages");
             String[] x=(String[])arg;
             if(x[1]==null&&selectedSubCategory==null&&x[0].equalsIgnoreCase(selectedCategory))
-                recyclerAdapterBooks.setMorePages();
+                listAdapterBooks.setMorePages();
             else if(x[1] != null && x[0].equalsIgnoreCase(selectedCategory) && x[1].equalsIgnoreCase(selectedSubCategory))
-                recyclerAdapterBooks.setMorePages();
+                listAdapterBooks.setMorePages();
         }
         if(o instanceof ObjectCollection.GeneralCategoryLoadedNotifier)
         {
             recyclerAdapterCategory.notifyDataSetChanged();
+
         }
         if(o instanceof RecyclerAdapterCategory.CategorySelectedNotifier)
         {
@@ -177,24 +181,40 @@ public class CategoryViewModel extends ViewModel implements Observer {
     }
 
     private void setRecyclerBooksToAdapter(ArrayList<Book> books) {
-        Log.e(tag,"inside setRecyclerAdapter to books");
-        ArrayList<Book> tmp=new ArrayList<>();
-        HashMap<Integer,ArrayList<Book>> tmpMap = new HashMap<>();
-        int k=0;
-        for(int i=0;i<books.size();i++)
-        {
-            tmp.add(books.get(i));
-            if(tmp.size()==2||i==books.size()-1)
-            {
-                tmpMap.put(k,tmp);
-                tmp=new ArrayList<>();
-                k++;
-            }
-        }
         Log.e(tag,"inside setRecyclerBooksToAdapter : books : "+books.size());
-        Log.e(tag,"inside setRecyclerBooksToAdapter : tmpMap : "+tmpMap.size());
-        recyclerAdapterBooks=new RecyclerAdapterBooks(context,tmpMap,selectedCategory,selectedSubCategory,activity);
-        recyclerBooks.setAdapter(recyclerAdapterBooks);
+        listAdapterBooks = new ListAdapterBooks(books,context,selectedCategory,selectedSubCategory);
+        gridBooks.setAdapter(listAdapterBooks);
+        gridBooks.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(ListAdapterBooks.morePagesLoaded&&firstVisibleItem+visibleItemCount>=totalItemCount)
+                {
+                    if (selectedSubCategory == null) {
+                        Log.e(tag,"for category : toalLoadedPages : "+ObjectCollection.category.get(selectedCategory).getTotalLoadedPage());
+                        Log.e(tag,"for category : toalPages : "+ObjectCollection.category.get(selectedCategory).getTotalPage());
+                        if (ObjectCollection.category.get(selectedCategory).getTotalLoadedPage() + 1
+                                <=
+                                ObjectCollection.category.get(selectedCategory).getTotalPage()) {
+                            ListAdapterBooks.morePagesLoaded = false;
+                            ObjectCollection.loadMorePagesForCategory(ObjectCollection.category.get(selectedCategory).getTotalLoadedPage() + 1, selectedCategory, activity);
+                        }
+                    } else {
+                        Log.e(tag,"for category : toalLoadedPages : "+ObjectCollection.category.get(selectedCategory).getSubCategory().get(selectedSubCategory).getTotalLoadedPage());
+                        Log.e(tag,"for category : toalPages : "+ObjectCollection.category.get(selectedCategory).getSubCategory().get(selectedSubCategory).getTotalPage());
+                        if (ObjectCollection.category.get(selectedCategory).getSubCategory().get(selectedSubCategory).getTotalLoadedPage() + 1
+                                <=
+                                ObjectCollection.category.get(selectedCategory).getSubCategory().get(selectedSubCategory).getTotalPage()) {
+                            ListAdapterBooks.morePagesLoaded = false;
+                            ObjectCollection.loadMorePagesForCategory(ObjectCollection.category.get(selectedCategory).getSubCategory().get(selectedSubCategory).getTotalLoadedPage() + 1, selectedCategory, selectedSubCategory, activity);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void setBooksForSubCategory() {

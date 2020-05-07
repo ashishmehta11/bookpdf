@@ -67,9 +67,12 @@ public class RecyclerAdapterCategory extends RecyclerView.Adapter<RecyclerAdapte
             select(holder);
             categorySelectedNotifier.notifyAboutCategorySelected(finalCatName);
             lastPos=position;
+            if(!selectedOnce&&position==0)
+                selectedOnce = true;
+            else
+                notifyDataSetChanged();
         });
         if(position==0&&!selectedOnce) {
-            selectedOnce=true;
             holder.cardCategory.callOnClick();
         }
         if(lastPos==position)
@@ -92,6 +95,7 @@ public class RecyclerAdapterCategory extends RecyclerView.Adapter<RecyclerAdapte
     public int getItemCount() {
         return ObjectCollection.category.size();
     }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView imgCategory;

@@ -106,6 +106,49 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                 }
             });
         }
+        else
+        {
+            position = bundle.getInt("current_book_position");
+            if(bundle.getString("current_sub_category")==null) {
+                book = ObjectCollection.category.get(bundle.getString("current_category")).getBooks().get(position);
+                //TODO : checking and calling method to fetch book details
+                if (!book.areDetailsFetched()) {
+                    MainActivity.showProgressDialog();
+                    ObjectCollection.getIndividualBookDetails(position, bundle.getString("current_category"),book.getBookUrl(), getActivity());
+                }
+            }
+            else {
+                book = ObjectCollection.category.get(bundle.getString("current_category")).getSubCategory().get(bundle.getString("current_sub_category")).getBooks().get(position);
+                //TODO : checking and calling method to fetch book details
+                if (!book.areDetailsFetched()) {
+                    MainActivity.showProgressDialog();
+                    ObjectCollection.getIndividualBookDetails(position,bundle.getString("current_category"), bundle.getString("current_sub_category"),book.getBookUrl(), getActivity());
+                }
+            }
+
+            initializeViews(book);
+            //TODO: observer for loading remaining data
+            bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(),integer -> {
+                if(integer >0)
+                {
+                    Book b;
+                    if(bundle.getString("current_sub_category")==null)
+                        b = ObjectCollection.category.get(bundle.getString("current_category")).getBooks().get(position);
+                    else
+                        b = ObjectCollection.category.get(bundle.getString("current_category")).getSubCategory().get(bundle.getString("current_sub_category")).getBooks().get(position);
+
+                    if(b.getAuthors().length()<=0)
+                        txtAuthor.setText(getString(R.string.info_not_available));
+                    else
+                        txtAuthor.setText(b.getAuthors());
+                    if(b.getBookLanguage().length()<=0)
+                        txtLanguage.setText(getString(R.string.info_not_available));
+                    else
+                        txtLanguage.setText(b.getBookLanguage());
+                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName(),b.getBookImageURL()));
+                }
+            });
+        }
 
         return view;
     }
