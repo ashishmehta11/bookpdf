@@ -492,7 +492,7 @@ public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategor
             try {
                 Document doc;
                 Log.e("Current load more url",category.get(currentCategory).getCategoryUrl()+"/p"+pgNoToLoad);
-                doc = Jsoup.connect(category.get(currentCategory).getCategoryUrl()+"p"+pgNoToLoad).get();
+                doc = Jsoup.connect(category.get(currentCategory).getCategoryUrl()+"/p"+pgNoToLoad).get();
                 ArrayList<Book> temp = new ArrayList<Book>();
                 Elements books = doc.select("[class=files-new]");
                 int totalPage = Integer.parseInt(doc.select("[class=Zebra_Pagination]").select("li").last().previousElementSibling().text());
@@ -530,7 +530,7 @@ public static void loadMorePagesForCategory(int pgNoToLoad,String currentCategor
         new Thread(() -> {
             try {
                 Document doc;
-                doc = Jsoup.connect(category.get(currentCategory).getSubCategory().get(currentSubCategory).getCategoryUrl()+"p"+pgNoToLoad).get();
+                doc = Jsoup.connect(category.get(currentCategory).getSubCategory().get(currentSubCategory).getCategoryUrl()+"/p"+pgNoToLoad).get();
                 Log.e("Current sub load more",category.get(currentCategory).getSubCategory().get(currentSubCategory).getCategoryUrl()+"/p"+pgNoToLoad);
                 ArrayList<Book> temp = new ArrayList<Book>();
                 Elements books = doc.select("[class=files-new]");
