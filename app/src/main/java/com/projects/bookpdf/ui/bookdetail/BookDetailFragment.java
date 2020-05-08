@@ -114,7 +114,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                 //TODO : checking and calling method to fetch book details
                 if (!book.areDetailsFetched()) {
                     MainActivity.showProgressDialog();
-                    ObjectCollection.getIndividualBookDetails(position, bundle.getString("current_category"),book.getBookUrl(), getActivity());
+                    ObjectCollection.getIndividualBookDetails(position,book.getBookUrl(),bundle.getString("current_category"), getActivity());
                 }
             }
             else {
@@ -122,7 +122,7 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
                 //TODO : checking and calling method to fetch book details
                 if (!book.areDetailsFetched()) {
                     MainActivity.showProgressDialog();
-                    ObjectCollection.getIndividualBookDetails(position,bundle.getString("current_category"), bundle.getString("current_sub_category"),book.getBookUrl(), getActivity());
+                    ObjectCollection.getIndividualBookDetails(position,book.getBookUrl(),bundle.getString("current_category"), bundle.getString("current_sub_category"), getActivity());
                 }
             }
 
