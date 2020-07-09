@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+       // Ads.ShowInterstitialAds(MainActivity.this);
         ObjectCollection.searchResultNotifier.addObserver(MainActivity.this);
         //TODO: setting progress dialog
         progressView = getLayoutInflater().inflate(R.layout.progress_wheel, null, false);

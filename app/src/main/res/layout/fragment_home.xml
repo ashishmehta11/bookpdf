@@ -4,8 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/text_color_white"
     tools:context=".ui.home.HomeFragment">
+
+    <LinearLayout
+        android:id="@+id/fb_banner_container"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
     <com.cruxlab.sectionedrecyclerview.lib.SectionHeaderLayout
         android:id="@+id/section_header_layout_home_page"
