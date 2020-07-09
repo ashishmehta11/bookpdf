@@ -3,10 +3,23 @@ package com.projects.bookpdf.ui.bookdetail;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.material.card.MaterialCardView;
+import com.projects.bookpdf.R;
 import com.projects.bookpdf.activity.MainActivity;
 import com.projects.bookpdf.data.ObjectCollection;
 import com.projects.bookpdf.database.DBHelper;
@@ -23,14 +36,19 @@ import java.util.Observer;
 
 class BookDetailViewModel extends ViewModel implements Observer {
     private Context context;
+    private FragmentActivity activity;
     private MutableLiveData<Integer> loadRemainingData;
+    private RewardedAd rewardedAd;
 
-    BookDetailViewModel(Context context) {
+    BookDetailViewModel(Context context, FragmentActivity activity) {
         super();
+        this.activity = activity;
         this.context = context;
         loadRemainingData = new MutableLiveData<>();
         loadRemainingData.setValue(0);
         ObjectCollection.bookDetailNotifier.addObserver(BookDetailViewModel.this);
+        rewardedAd = new RewardedAd(context,
+                context.getString(R.string.ad_unit_reward));
     }
 
     //TODO: Download the book!!
@@ -38,7 +56,50 @@ class BookDetailViewModel extends ViewModel implements Observer {
         Log.e("Download url f method", downloadUrl);
         if (downloadUrl.length() > 0) {
             Log.e("AJM", "calling download task");
-            new DownloadTask(bookImgUrl,bookName).execute(downloadUrl, bookName);
+            View view = LayoutInflater.from(context).inflate(R.layout.confirm_dialog, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog alertDialog = null;
+            builder.setView(view);
+            alertDialog = builder.create();
+            TextView title = view.findViewById(R.id.txt_search_dialog_title);
+            title.setText("Watch a video to download the book");
+            MaterialCardView yes, no;
+            yes = view.findViewById(R.id.material_card_yes);
+            no = view.findViewById(R.id.material_card_no);
+            AlertDialog finalAlertDialog1 = alertDialog;
+            yes.setOnClickListener(v -> {
+                finalAlertDialog1.dismiss();
+                MainActivity.showProgressDialog();
+                rewardedAd.loadAd(new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
+                    @Override
+                    public void onRewardedAdLoaded() {
+                        super.onRewardedAdLoaded();
+                        MainActivity.stopProgressDialog();
+                        rewardedAd.show(activity, new RewardedAdCallback() {
+                            @Override
+                            public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                                new DownloadTask(bookImgUrl, bookName).execute(downloadUrl, bookName);
+                            }
+
+                            @Override
+                            public void onRewardedAdFailedToShow(int i) {
+                                super.onRewardedAdFailedToShow(i);
+                                MainActivity.showFailureDialog("Error loading the video");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToLoad(int i) {
+                        super.onRewardedAdFailedToLoad(i);
+                        MainActivity.stopProgressDialog();
+                        new DownloadTask(bookImgUrl, bookName).execute(downloadUrl, bookName);
+                    }
+                });
+            });
+            AlertDialog finalAlertDialog = alertDialog;
+            no.setOnClickListener(v -> finalAlertDialog.dismiss());
+            alertDialog.show();
         }
     }
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.activity.MainActivity;
@@ -32,14 +37,15 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
     private ImageView bookCover;
     private MaterialCardView btnDownload;
     private TextView txtTitle, txtYear, txtSize, txtTotalDownloads, txtAuthor, txtPages, txtLanguage;
-    private String headerText="";
-    private int position=-1;
+    private String headerText = "";
+    private int position = -1;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         bookDetailViewModel =
                 new ViewModelProvider(BookDetailFragment.this
-                        , new BookDetailViewModelFactory(getContext()))
+                        , new BookDetailViewModelFactory(requireContext(), requireActivity()))
                         .get(BookDetailViewModel.class);
         Log.e("AJM", "catvm :" + bookDetailViewModel);
         view = inflater.inflate(R.layout.fragment_book_detail, container, false);
@@ -62,25 +68,22 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
             }
             initializeViews(book);
             //TODO: observer for loading remaining data
-            bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(),integer -> {
-                if(integer >0)
-                {
+            bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(), integer -> {
+                if (integer > 0) {
                     Book b = Objects.requireNonNull(ObjectCollection.homePageBook.getBooks().get(headerText)).get(position);
-                    if(b.getAuthors().length()<=0)
+                    if (b.getAuthors().length() <= 0)
                         txtAuthor.setText(getString(R.string.info_not_available));
                     else
                         txtAuthor.setText(b.getAuthors());
-                    if(b.getBookLanguage().length()<=0)
+                    if (b.getBookLanguage().length() <= 0)
                         txtLanguage.setText(getString(R.string.info_not_available));
                     else
                         txtLanguage.setText(b.getBookLanguage());
                     txtLanguage.setText(b.getBookLanguage());
-                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName(),b.getBookImageURL()));
+                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(), b.getBookName(), b.getBookImageURL()));
                 }
             });
-        }
-
-        else if (!bundle.getBoolean("coming_from_home") && bundle.getBoolean("coming_from_search")) {
+        } else if (!bundle.getBoolean("coming_from_home") && bundle.getBoolean("coming_from_search")) {
             position = bundle.getInt("current_book_position");
             book = ObjectCollection.searchBook.getBooks().get(position);
             //TODO : checking and calling method to fetch book details
@@ -90,67 +93,82 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
             }
             initializeViews(book);
             //TODO: observer for loading remaining data
-            bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(),integer -> {
-                if(integer >0)
-                {
+            bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(), integer -> {
+                if (integer > 0) {
                     Book b = ObjectCollection.searchBook.getBooks().get(position);
-                    if(b.getAuthors().length()<=0)
+                    if (b.getAuthors().length() <= 0)
                         txtAuthor.setText(getString(R.string.info_not_available));
                     else
                         txtAuthor.setText(b.getAuthors());
-                    if(b.getBookLanguage().length()<=0)
+                    if (b.getBookLanguage().length() <= 0)
                         txtLanguage.setText(getString(R.string.info_not_available));
                     else
                         txtLanguage.setText(b.getBookLanguage());
-                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName(),b.getBookImageURL()));
+                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(), b.getBookName(), b.getBookImageURL()));
                 }
             });
-        }
-        else
-        {
+        } else {
             position = bundle.getInt("current_book_position");
-            if(bundle.getString("current_sub_category")==null) {
+            if (bundle.getString("current_sub_category") == null) {
                 book = ObjectCollection.category.get(bundle.getString("current_category")).getBooks().get(position);
                 //TODO : checking and calling method to fetch book details
                 if (!book.areDetailsFetched()) {
                     MainActivity.showProgressDialog();
-                    ObjectCollection.getIndividualBookDetails(position,book.getBookUrl(),bundle.getString("current_category"), getActivity());
+                    ObjectCollection.getIndividualBookDetails(position, book.getBookUrl(), bundle.getString("current_category"), getActivity());
                 }
-            }
-            else {
+            } else {
                 book = ObjectCollection.category.get(bundle.getString("current_category")).getSubCategory().get(bundle.getString("current_sub_category")).getBooks().get(position);
                 //TODO : checking and calling method to fetch book details
                 if (!book.areDetailsFetched()) {
                     MainActivity.showProgressDialog();
-                    ObjectCollection.getIndividualBookDetails(position,book.getBookUrl(),bundle.getString("current_category"), bundle.getString("current_sub_category"), getActivity());
+                    ObjectCollection.getIndividualBookDetails(position, book.getBookUrl(), bundle.getString("current_category"), bundle.getString("current_sub_category"), getActivity());
                 }
             }
 
             initializeViews(book);
             //TODO: observer for loading remaining data
-            bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(),integer -> {
-                if(integer >0)
-                {
+            bookDetailViewModel.getLoadRemainingData().observe(getViewLifecycleOwner(), integer -> {
+                if (integer > 0) {
                     Book b;
-                    if(bundle.getString("current_sub_category")==null)
+                    if (bundle.getString("current_sub_category") == null)
                         b = ObjectCollection.category.get(bundle.getString("current_category")).getBooks().get(position);
                     else
                         b = ObjectCollection.category.get(bundle.getString("current_category")).getSubCategory().get(bundle.getString("current_sub_category")).getBooks().get(position);
 
-                    if(b.getAuthors().length()<=0)
+                    if (b.getAuthors().length() <= 0)
                         txtAuthor.setText(getString(R.string.info_not_available));
                     else
                         txtAuthor.setText(b.getAuthors());
-                    if(b.getBookLanguage().length()<=0)
+                    if (b.getBookLanguage().length() <= 0)
                         txtLanguage.setText(getString(R.string.info_not_available));
                     else
                         txtLanguage.setText(b.getBookLanguage());
-                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(),b.getBookName(),b.getBookImageURL()));
+                    btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(b.getDownloadUrl(), b.getBookName(), b.getBookImageURL()));
                 }
             });
         }
-
+        loadTopAdBanner();
         return view;
+    }
+
+    private void loadTopAdBanner() {
+        LinearLayout linearLayout = view.findViewById(R.id.ad_linear_layout);
+        AdView adView = new AdView(requireContext());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(getString(R.string.ad_unit_id_banner));
+        linearLayout.addView(adView);
+        adView.loadAd(new AdRequest.Builder().build());
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+        });
     }
 
     @Override
@@ -168,43 +186,43 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
         txtTitle.setText(book.getBookName());
 
         txtLanguage = view.findViewById(R.id.txt_book_language);
-        if(book.getBookLanguage().length()<=0)
+        if (book.getBookLanguage().length() <= 0)
             txtLanguage.setText(getString(R.string.info_not_available));
         else
             txtLanguage.setText(book.getBookLanguage());
 
         txtPages = view.findViewById(R.id.txt_pages_of_book);
-        if(book.getBookPage().length()<=0)
+        if (book.getBookPage().length() <= 0)
             txtPages.setText(getString(R.string.info_not_available));
         else
             txtPages.setText(book.getBookPage().split(" ")[0]);
 
         txtYear = view.findViewById(R.id.txt_year);
-        if(book.getBookYear().length()<=0)
+        if (book.getBookYear().length() <= 0)
             txtYear.setText(getString(R.string.info_not_available));
         else
             txtYear.setText(book.getBookYear());
 
         txtSize = view.findViewById(R.id.txt_book_size);
-        if(book.getBookSize().length()<=0)
+        if (book.getBookSize().length() <= 0)
             txtSize.setText(getString(R.string.info_not_available));
         else
             txtSize.setText(book.getBookSize());
 
         txtTotalDownloads = view.findViewById(R.id.txt_downloads);
-        if(book.getBookTotalDownload().length()<=0)
+        if (book.getBookTotalDownload().length() <= 0)
             txtTotalDownloads.setText(getString(R.string.info_not_available));
         else
             txtTotalDownloads.setText(book.getBookTotalDownload().split(" ")[0]);
 
         txtAuthor = view.findViewById(R.id.txt_author);
-        if(book.getAuthors().length()<=0)
+        if (book.getAuthors().length() <= 0)
             txtAuthor.setText(getString(R.string.info_not_available));
         else
             txtAuthor.setText(book.getAuthors());
 
         btnDownload = view.findViewById(R.id.material_card_download);
-        btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(book.getDownloadUrl(),book.getBookName(),book.getBookImageURL()));
+        btnDownload.setOnClickListener(v -> bookDetailViewModel.downloadBook(book.getDownloadUrl(), book.getBookName(), book.getBookImageURL()));
     }
 
     private String calculateTotalDownloads(String totalDownloads) {

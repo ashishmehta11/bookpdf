@@ -39,4 +39,12 @@
     <string name="share_book">Share Book</string>
     <string name="delete_book">Delete Book</string>
     <string name="discover_more">Discover More</string>
+
+    <string name="fb_banner" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="fb_interstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="fb_app_id" translatable="false">1070742289975147</string>
+    <string name="testDeviceID" translatable="false">6a3a6a6d-d3a7-4440-96fa-024cf649e030</string>
+    <string name="ad_unit_id_banner">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_unit_id_interstitial">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="ad_unit_reward">ca-app-pub-3940256099942544/5224354917</string>
 </resources>

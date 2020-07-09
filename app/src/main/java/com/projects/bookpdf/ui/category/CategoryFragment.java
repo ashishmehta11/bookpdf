@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.projects.bookpdf.R;
 
 public class CategoryFragment extends Fragment implements ViewModelStoreOwner {
@@ -39,15 +44,35 @@ public class CategoryFragment extends Fragment implements ViewModelStoreOwner {
                             subCategory.setVisibility(View.VISIBLE);
                             txtSubCategoryTitle.setVisibility(View.VISIBLE);
                         }
-                        else
-                        {
+                        else {
                             subCategory.setVisibility(View.GONE);
                             txtSubCategoryTitle.setVisibility(View.GONE);
                         }
                     });
-            categoryViewModel.setViews(books,category,subCategory,getActivity());
+            categoryViewModel.setViews(books, category, subCategory, getActivity());
+            loadTopAdBanner();
         }
         return view;
+    }
+
+    private void loadTopAdBanner() {
+        LinearLayout linearLayout = view.findViewById(R.id.ad_linear_layout);
+        AdView adView = new AdView(requireContext());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(getString(R.string.ad_unit_id_banner));
+        linearLayout.addView(adView);
+        adView.loadAd(new AdRequest.Builder().build());
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+        });
     }
 
     @Override
