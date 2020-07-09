@@ -18,6 +18,9 @@ import androidx.navigation.Navigation;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.FadingCircle;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.data.MainActivityData;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private View confirmDialogView, searchDialogView, progressView, successDialogView, failureDialogView, infoDialogView;
     private AlertDialog confirmDialog, searchDialog;
     private MaterialCardView yesCard, noCard, searchCard;
-
+    private InterstitialAd interstitialAd;
     public static void showProgressDialog() {
         if (!progressDialog.isShowing())
             progressDialog.show();
@@ -75,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-       // Ads.ShowInterstitialAds(MainActivity.this);
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.ad_unit_id_interstitial));
+        // Ads.ShowInterstitialAds(MainActivity.this);
         ObjectCollection.searchResultNotifier.addObserver(MainActivity.this);
         //TODO: setting progress dialog
         progressView = getLayoutInflater().inflate(R.layout.progress_wheel, null, false);
@@ -181,14 +186,43 @@ public class MainActivity extends AppCompatActivity implements Observer {
         home = findViewById(R.id.card_view_home);
         home.setOnClickListener(v -> {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            navController.navigate(R.id.home);
+            if (navController.getCurrentDestination().getId() != R.id.home) {
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        interstitialAd.show();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                    }
+                });
+                navController.navigate(R.id.home);
+            }
         });
         category = findViewById(R.id.card_view_category);
         category.setOnClickListener(v -> {
-                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    navController.navigate(R.id.category);
-                }
-        );
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            if (navController.getCurrentDestination().getId() != R.id.category) {
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        interstitialAd.show();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                    }
+                });
+                navController.navigate(R.id.category);
+            }
+        });
         search = findViewById(R.id.card_view_search);
         search.setOnClickListener(v -> {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -198,7 +232,22 @@ public class MainActivity extends AppCompatActivity implements Observer {
         downloads = findViewById(R.id.card_view_downloads);
         downloads.setOnClickListener(v -> {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            navController.navigate(R.id.downloads);
+            if (navController.getCurrentDestination().getId() != R.id.downloads) {
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        interstitialAd.show();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                    }
+                });
+                navController.navigate(R.id.downloads);
+            }
         });
         exit = findViewById(R.id.card_view_exit);
         exit.setOnClickListener(v -> showConfirmationDialog(getString(R.string.txt_dialog_exit_title)));
@@ -241,6 +290,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 SearchFragment.view = null;
                 SearchFragment.searchViewModel = null;
                 Log.e("AJM", "Below setting search fragment view and vm = null");
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        interstitialAd.show();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                    }
+                });
                 navController.navigate(R.id.search);
             } else if ((int) arg == -1) {
                 showInfoDialog("Sorry, something unexpected occurred!\nTry again with a different search query");

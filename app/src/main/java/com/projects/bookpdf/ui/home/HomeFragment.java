@@ -13,10 +13,11 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cruxlab.sectionedrecyclerview.lib.SectionHeaderLayout;
-import com.facebook.ads.AdSettings;
-import com.facebook.ads.AdSize;
 import com.facebook.ads.AudienceNetworkAds;
-import com.projects.bookpdf.Constants;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.projects.bookpdf.R;
 
 
@@ -26,6 +27,7 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
     public static HomeViewModel homeViewModel=null;
     private SectionHeaderLayout sectionHeaderLayout;
     private RecyclerView recyclerHomePage;
+    private AdView adViewTop;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,23 +39,35 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
         if (view == null) {
             AudienceNetworkAds.initialize(requireContext());
             view = inflater.inflate(R.layout.fragment_home, container, false);
-            loadFBBanner();
             recyclerHomePage = view.findViewById(R.id.recycler_view_home_page);
             sectionHeaderLayout = view.findViewById(R.id.section_header_layout_home_page);
             homeViewModel.assignViews(recyclerHomePage, sectionHeaderLayout);
             homeViewModel.setAdapter();
+            loadTopAdBanner();
         }
         return view;
     }
-    private void loadFBBanner() {
-        AdSettings.addTestDevice(getString(R.string.testDeviceID));
-        if (Constants.isOnline(requireContext())) {
-            com.facebook.ads.AdView adView = new com.facebook.ads.AdView(requireContext(), getResources().getString(R.string.fb_banner), AdSize.BANNER_HEIGHT_50);
-            LinearLayout adContainer = (LinearLayout) view.findViewById(R.id.fb_banner_container);
-            adContainer.addView(adView);
-            adView.loadAd();
-        }
+
+    private void loadTopAdBanner() {
+        LinearLayout linearLayout = view.findViewById(R.id.ad_linear_layout);
+        AdView adView = new AdView(requireContext());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(getString(R.string.ad_unit_id_banner));
+        linearLayout.addView(adView);
+        adView.loadAd(new AdRequest.Builder().build());
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+        });
     }
+
     @Override
     public void onResume() {
         super.onResume();
