@@ -1,3 +1,4 @@
+/*
 package com.projects.bookpdf;
 
 import android.content.Context;
@@ -56,4 +57,4 @@ public class Ads {
             });
         }
     }
-}
+}*/

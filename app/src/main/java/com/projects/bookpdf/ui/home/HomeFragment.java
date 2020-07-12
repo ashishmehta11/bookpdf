@@ -1,6 +1,7 @@
 package com.projects.bookpdf.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cruxlab.sectionedrecyclerview.lib.SectionHeaderLayout;
-import com.facebook.ads.AudienceNetworkAds;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -22,7 +22,7 @@ import com.projects.bookpdf.R;
 
 
 public class HomeFragment extends Fragment implements ViewModelStoreOwner {
-
+    private static final String TAG = "HomeFragment";
     public static View view = null;
     public static HomeViewModel homeViewModel=null;
     private SectionHeaderLayout sectionHeaderLayout;
@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
                         , new HomeViewModelFactory(getContext()))
                         .get(HomeViewModel.class);
         if (view == null) {
-            AudienceNetworkAds.initialize(requireContext());
             view = inflater.inflate(R.layout.fragment_home, container, false);
             recyclerHomePage = view.findViewById(R.id.recycler_view_home_page);
             sectionHeaderLayout = view.findViewById(R.id.section_header_layout_home_page);
@@ -59,12 +58,15 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
+                Log.e(TAG, "onAdFailedToLoad: ");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                Log.e(TAG, "onAdLoaded: ");
             }
+
         });
     }
 
