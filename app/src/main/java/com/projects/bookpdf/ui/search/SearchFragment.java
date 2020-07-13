@@ -1,6 +1,7 @@
 package com.projects.bookpdf.ui.search;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,8 @@ import com.google.android.gms.ads.AdView;
 import com.projects.bookpdf.R;
 
 public class SearchFragment extends Fragment implements ViewModelStoreOwner {
-    public static SearchViewModel searchViewModel=null;
+    private static final String TAG = "SearchFragment";
+    public static SearchViewModel searchViewModel = null;
     public static View view=null;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,12 +50,15 @@ public class SearchFragment extends Fragment implements ViewModelStoreOwner {
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
+                Log.e(TAG, "onAdFailedToLoad: ");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                Log.e(TAG, "onAdLoaded: ");
             }
+
         });
     }
 

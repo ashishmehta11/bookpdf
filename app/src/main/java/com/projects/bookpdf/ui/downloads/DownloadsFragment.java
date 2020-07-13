@@ -1,6 +1,7 @@
 package com.projects.bookpdf.ui.downloads;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.android.gms.ads.AdView;
 import com.projects.bookpdf.R;
 
 public class DownloadsFragment extends Fragment implements ViewModelStoreOwner {
+    private static final String TAG = "DownloadsFragment";
     private DownloadsViewModel downloadsViewModel;
     private View view ;
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -39,18 +41,18 @@ public class DownloadsFragment extends Fragment implements ViewModelStoreOwner {
         AdView adView = new AdView(requireContext());
         adView.setAdSize(AdSize.BANNER);
         adView.setAdUnitId(getString(R.string.ad_unit_id_banner));
-        linearLayout.removeAllViews();
         linearLayout.addView(adView);
         adView.loadAd(new AdRequest.Builder().build());
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
+                Log.e(TAG, "onAdFailedToLoad: ");
             }
-
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                Log.e(TAG, "onAdLoaded: ");
             }
         });
     }

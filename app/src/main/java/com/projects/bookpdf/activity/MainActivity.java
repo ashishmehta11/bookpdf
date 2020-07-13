@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
+                        Log.e("AJM", "Inter Ad Failed");
                     }
                 });
                 navController.navigate(R.id.home);
@@ -218,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
+                        Log.e("AJM", "Inter Ad Failed : i :" + i);
                     }
                 });
                 navController.navigate(R.id.category);
@@ -239,24 +241,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     public void onAdLoaded() {
                         super.onAdLoaded();
                         interstitialAd.show();
-                        interstitialAd.setAdListener(new AdListener() {
-                            @Override
-                            public void onAdFailedToLoad(int i) {
-                                super.onAdFailedToLoad(i);
-                                Log.e("AJM", "onAdFailedToLoad: ");
-                            }
-
-                            @Override
-                            public void onAdLoaded() {
-                                super.onAdLoaded();
-                                Log.e("AJM", "onAdLoaded: ");
-                            }
-                        });
                     }
 
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
+                        Log.e("AJM", "Inter Ad Failed");
                     }
                 });
                 navController.navigate(R.id.downloads);

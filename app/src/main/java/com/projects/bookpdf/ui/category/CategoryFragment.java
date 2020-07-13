@@ -1,6 +1,7 @@
 package com.projects.bookpdf.ui.category;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,8 @@ import com.google.android.gms.ads.AdView;
 import com.projects.bookpdf.R;
 
 public class CategoryFragment extends Fragment implements ViewModelStoreOwner {
-
-    public static CategoryViewModel categoryViewModel=null;
+    private static final String TAG = "CategoryFragment";
+    public static CategoryViewModel categoryViewModel = null;
     public static View view=null;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,12 +67,15 @@ public class CategoryFragment extends Fragment implements ViewModelStoreOwner {
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
+                Log.e(TAG, "onAdFailedToLoad: ");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                Log.e(TAG, "onAdLoaded: ");
             }
+
         });
     }
 

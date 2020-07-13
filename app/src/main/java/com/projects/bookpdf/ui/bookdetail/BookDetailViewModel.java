@@ -35,6 +35,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 class BookDetailViewModel extends ViewModel implements Observer {
+    private static final String TAG = "BookDetailViewModel";
     private Context context;
     private FragmentActivity activity;
     private MutableLiveData<Integer> loadRemainingData;
@@ -93,6 +94,7 @@ class BookDetailViewModel extends ViewModel implements Observer {
                     public void onRewardedAdFailedToLoad(int i) {
                         super.onRewardedAdFailedToLoad(i);
                         MainActivity.stopProgressDialog();
+                        Log.e(TAG, "onRewardedAdFailedToLoad: i :" + i);
                         new DownloadTask(bookImgUrl, bookName).execute(downloadUrl, bookName);
                     }
                 });

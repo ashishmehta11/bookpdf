@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                Log.e(TAG, "onAdFailedToLoad: ");
+                Log.e(TAG, "onAdFailedToLoad: i :  " + i);
             }
 
             @Override
