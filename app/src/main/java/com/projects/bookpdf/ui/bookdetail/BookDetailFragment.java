@@ -3,6 +3,7 @@ package com.projects.bookpdf.ui.bookdetail;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.activity.MainActivity;
 import com.projects.bookpdf.data.Book;
 import com.projects.bookpdf.data.ObjectCollection;
+import com.startapp.sdk.ads.banner.Cover;
 
 import java.util.Objects;
 
@@ -153,22 +151,13 @@ public class BookDetailFragment extends Fragment implements ViewModelStoreOwner 
 
     private void loadTopAdBanner() {
         LinearLayout linearLayout = view.findViewById(R.id.ad_linear_layout);
-        AdView adView = new AdView(requireContext());
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId(getString(R.string.ad_unit_id_banner));
-        linearLayout.addView(adView);
-        adView.loadAd(new AdRequest.Builder().build());
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-            }
-        });
+        Cover startAppCover = new Cover(requireContext());
+        LinearLayout.LayoutParams coverParameters =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        coverParameters.gravity = Gravity.CENTER;
+        linearLayout.addView(startAppCover);
     }
 
     @Override

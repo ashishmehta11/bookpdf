@@ -1,7 +1,6 @@
 package com.projects.bookpdf.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,9 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cruxlab.sectionedrecyclerview.lib.SectionHeaderLayout;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.projects.bookpdf.R;
+import com.startapp.sdk.ads.banner.Banner;
 
 
 public class HomeFragment extends Fragment implements ViewModelStoreOwner {
@@ -49,7 +46,10 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
 
     private void loadTopAdBanner() {
         LinearLayout linearLayout = view.findViewById(R.id.ad_linear_layout);
-        AdView adView = new AdView(requireContext());
+        com.startapp.sdk.ads.banner.Banner banner = new Banner(requireContext());
+        banner.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        linearLayout.addView(banner);
+        /*AdView adView = new AdView(requireContext());
         adView.setAdSize(AdSize.BANNER);
         adView.setAdUnitId(getString(R.string.ad_unit_id_banner));
         linearLayout.addView(adView);
@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                Log.e(TAG, "onAdFailedToLoad: i :  " + i);
+                Log.e(TAG, "onAdFailedToLoad: ");
             }
 
             @Override
@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment implements ViewModelStoreOwner {
                 Log.e(TAG, "onAdLoaded: ");
             }
 
-        });
+        });*/
     }
 
     @Override

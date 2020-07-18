@@ -7,22 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
 import com.projects.bookpdf.activity.MainActivity;
 import com.projects.bookpdf.data.ObjectCollection;
 import com.projects.bookpdf.database.DBHelper;
+import com.startapp.sdk.adsbase.Ad;
+import com.startapp.sdk.adsbase.StartAppAd;
+import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,7 +69,7 @@ class BookDetailViewModel extends ViewModel implements Observer {
             yes.setOnClickListener(v -> {
                 finalAlertDialog1.dismiss();
                 MainActivity.showProgressDialog();
-                rewardedAd.loadAd(new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
+                /*rewardedAd.loadAd(new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
                     @Override
                     public void onRewardedAdLoaded() {
                         super.onRewardedAdLoaded();
@@ -97,7 +95,35 @@ class BookDetailViewModel extends ViewModel implements Observer {
                         Log.e(TAG, "onRewardedAdFailedToLoad: i :" + i);
                         new DownloadTask(bookImgUrl, bookName).execute(downloadUrl, bookName);
                     }
-                });
+                });*/
+                try {
+                    StartAppAd startAppAd = new StartAppAd(context);
+                    startAppAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
+                        @Override
+                        public void onReceiveAd(Ad ad) {
+                            Log.e(TAG, "onReceiveAd: ");
+                            startAppAd.setVideoListener(() -> {
+                                // Grant user with the reward
+                                MainActivity.stopProgressDialog();
+                                MainActivity.showInfoDialog("Your should will be downloaded soon");
+                                new DownloadTask(bookImgUrl, bookName).execute(downloadUrl, bookName);
+                            });
+                        }
+
+                        @Override
+                        public void onFailedToReceiveAd(Ad ad) {
+                            MainActivity.stopProgressDialog();
+                            MainActivity.showInfoDialog("Your should will be downloaded soon");
+                            new DownloadTask(bookImgUrl, bookName).execute(downloadUrl, bookName);
+                            Log.e(TAG, "onFailedToReceiveAd: ad: " + ad.getErrorMessage());
+                        }
+                    });
+                } catch (Exception e) {
+                    MainActivity.stopProgressDialog();
+                    MainActivity.showInfoDialog("Your should will be downloaded soon");
+                    new DownloadTask(bookImgUrl, bookName).execute(downloadUrl, bookName);
+                    Log.e(TAG, "downloadBook: Reward ad exception ", e);
+                }
             });
             AlertDialog finalAlertDialog = alertDialog;
             no.setOnClickListener(v -> finalAlertDialog.dismiss());

@@ -25,6 +25,10 @@
         </provider>
 
         <meta-data
+            android:name="com.startapp.sdk.APPLICATION_ID"
+            android:value="206963489" />
+
+        <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-2490122222099291~7709848998" />
 
@@ -32,7 +36,7 @@
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="locked"
-            android:theme="@style/AppMaterialTheme"/>
+            android:theme="@style/AppMaterialTheme" />
         <activity android:name=".activity.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

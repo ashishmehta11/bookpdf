@@ -18,8 +18,6 @@ import androidx.navigation.Navigation;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.FadingCircle;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.card.MaterialCardView;
 import com.projects.bookpdf.R;
@@ -29,6 +27,7 @@ import com.projects.bookpdf.ui.category.CategoryFragment;
 import com.projects.bookpdf.ui.home.HomeFragment;
 import com.projects.bookpdf.ui.search.SearchFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.startapp.sdk.adsbase.StartAppAd;
 
 import java.util.Objects;
 import java.util.Observable;
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         home.setOnClickListener(v -> {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             if (navController.getCurrentDestination().getId() != R.id.home) {
-                interstitialAd.loadAd(new AdRequest.Builder().build());
+               /* interstitialAd.loadAd(new AdRequest.Builder().build());
                 interstitialAd.setAdListener(new AdListener() {
                     @Override
                     public void onAdLoaded() {
@@ -200,15 +199,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
                         super.onAdFailedToLoad(i);
                         Log.e("AJM", "Inter Ad Failed");
                     }
-                });
+                });*/
                 navController.navigate(R.id.home);
+                StartAppAd.showAd(this);
             }
         });
         category = findViewById(R.id.card_view_category);
         category.setOnClickListener(v -> {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             if (navController.getCurrentDestination().getId() != R.id.category) {
-                interstitialAd.loadAd(new AdRequest.Builder().build());
+                /*interstitialAd.loadAd(new AdRequest.Builder().build());
                 interstitialAd.setAdListener(new AdListener() {
                     @Override
                     public void onAdLoaded() {
@@ -221,8 +221,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
                         super.onAdFailedToLoad(i);
                         Log.e("AJM", "Inter Ad Failed : i :" + i);
                     }
-                });
+                });*/
                 navController.navigate(R.id.category);
+                StartAppAd.showAd(this);
             }
         });
         search = findViewById(R.id.card_view_search);
@@ -235,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         downloads.setOnClickListener(v -> {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             if (navController.getCurrentDestination().getId() != R.id.downloads) {
-                interstitialAd.loadAd(new AdRequest.Builder().build());
+                /*interstitialAd.loadAd(new AdRequest.Builder().build());
                 interstitialAd.setAdListener(new AdListener() {
                     @Override
                     public void onAdLoaded() {
@@ -248,7 +249,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
                         super.onAdFailedToLoad(i);
                         Log.e("AJM", "Inter Ad Failed");
                     }
-                });
+                });*/
+                StartAppAd.showAd(this);
                 navController.navigate(R.id.downloads);
             }
         });
@@ -274,8 +276,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 navController.navigateUp();
             else if (navDestination.getId() != R.id.home)
                 navController.navigate(R.id.home);
-            else
+            else {
+                StartAppAd.onBackPressed(this);
                 showConfirmationDialog(getString(R.string.txt_dialog_exit_title));
+            }
         }
     }
 
@@ -293,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 SearchFragment.view = null;
                 SearchFragment.searchViewModel = null;
                 Log.e("AJM", "Below setting search fragment view and vm = null");
-                interstitialAd.loadAd(new AdRequest.Builder().build());
+               /* interstitialAd.loadAd(new AdRequest.Builder().build());
                 interstitialAd.setAdListener(new AdListener() {
                     @Override
                     public void onAdLoaded() {
@@ -305,7 +309,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
                     }
-                });
+                });*/
+                StartAppAd.showAd(this);
                 navController.navigate(R.id.search);
             } else if ((int) arg == -1) {
                 showInfoDialog("Sorry, something unexpected occurred!\nTry again with a different search query");
